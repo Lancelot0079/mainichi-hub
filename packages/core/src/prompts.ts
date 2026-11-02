@@ -29,14 +29,6 @@ ${text}
 """`;
 }
 
-export function quizPrompt(deck: string[]): string {
-  return `Crea un mini examen de 5 preguntas de opción múltiple estilo JLPT N5 (vocabulario, lectura de kanji y gramática/partículas) para un hispanohablante principiante.
-${deck.length ? `Basa al menos 3 preguntas en este vocabulario que está estudiando:\n${deck.join("\n")}` : "Usa vocabulario básico de N5."}
-Responde SOLO con un arreglo JSON de 5 objetos con esta forma:
-[{"q":"わたし＿＿がくせいです。","opts":["は","を","に","で"],"a":0,"exp":"は marca el tema de la oración."}]
-"q" la pregunta (en japonés, con una instrucción breve en español si hace falta); "opts" exactamente 4 opciones; "a" el índice de la correcta; "exp" explicación breve en español.`;
-}
-
 /** Assistants often wrap JSON in a Markdown fence or add a sentence around it. */
 export function extractJson(reply: string): unknown {
   const fenced = /```(?:json)?\s*([\s\S]*?)```/.exec(reply)?.[1];

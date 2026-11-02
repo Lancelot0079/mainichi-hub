@@ -5,11 +5,15 @@ import "@fontsource/zen-kaku-gothic-new/500.css";
 import "@fontsource/zen-kaku-gothic-new/700.css";
 import "./ui/theme.css";
 import "./ui/components.css";
+import "./ui/features.css";
+import "./ui/motion.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./app/App";
 import { startSync } from "./state/sync";
+import { startAppearance } from "./ui/appearance";
 
+startAppearance();
 startSync();
 
 createRoot(document.getElementById("root")!).render(

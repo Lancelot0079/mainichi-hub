@@ -10,6 +10,8 @@ import {
   type CardRating,
   type Correction,
   type DayLog,
+  type ExamAttempt,
+  type ListeningItem,
   type DraftCard,
   type HubState,
   type KanaItem,
@@ -208,6 +210,70 @@ export function saveDiaryEntry(text: string, prompt: string, feedback: Correctio
 export function setWeekly(week: string, check: string, value: boolean) {
   update((s) => {
     s.progress.weekly[week] = { ...s.progress.weekly[week], [check]: value };
+  });
+}
+
+export function addListeningItem(
+  item: Omit<ListeningItem, "id" | "updatedAt" | "done" | "deletedAt"> & { done?: number },
+) {
+  update((s) => {
+    s.listening.push({ done: 0, ...item, id: newId(), updatedAt: now() });
+  });
+}
+
+export function updateListeningItem(id: string, patch: Partial<ListeningItem>) {
+  update((s) => {
+    const item = s.listening.find((x) => x.id === id);
+    if (item) Object.assign(item, patch, { updatedAt: now() });
+  });
+}
+
+export function removeListeningItem(id: string) {
+  updateListeningItem(id, { deletedAt: now() });
+}
+
+export function restoreListeningItem(id: string) {
+  update((s) => {
+    const item = s.listening.find((x) => x.id === id);
+    if (item) {
+      delete item.deletedAt;
+      item.updatedAt = now();
+    }
+  });
+}
+
+/** Logs listening time against the library, so it counts for the listening block. */
+export function logListening(item: ListeningItem, minutes: number, finishedEpisode: boolean) {
+  update((s) => {
+    dayLog(s, getHub().today).sessions.push({
+      id: newId(),
+      resourceId: "escucha",
+      itemId: item.id,
+      minutes,
+      note: item.title,
+      at: now(),
+    });
+    const stored = s.listening.find((x) => x.id === item.id);
+    if (stored && finishedEpisode) {
+      stored.done += 1;
+      stored.updatedAt = now();
+    }
+  });
+}
+
+export function saveExamAttempt(attempt: Omit<ExamAttempt, "id" | "updatedAt">) {
+  update((s) => {
+    s.exams.push({ ...attempt, id: newId(), updatedAt: now() });
+  });
+}
+
+export function removeExamAttempt(id: string) {
+  update((s) => {
+    const attempt = s.exams.find((x) => x.id === id);
+    if (attempt) {
+      attempt.deletedAt = now();
+      attempt.updatedAt = attempt.deletedAt;
+    }
   });
 }
 

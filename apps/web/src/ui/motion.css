@@ -1,0 +1,153 @@
+/*
+ * Motion stays quiet: short, small and only on transform and opacity. Everything here is skipped
+ * when the system asks for reduced motion.
+ */
+:root {
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Changing page */
+  .page {
+    animation: page-in 260ms var(--ease-out) both;
+  }
+
+  /* Cards settle in one after another */
+  .page .grid > *,
+  .page > .panel,
+  .page .stack > .panel {
+    animation: rise 340ms var(--ease-out) both;
+  }
+  .page .grid > :nth-child(2) {
+    animation-delay: 30ms;
+  }
+  .page .grid > :nth-child(3) {
+    animation-delay: 60ms;
+  }
+  .page .grid > :nth-child(4) {
+    animation-delay: 90ms;
+  }
+  .page .grid > :nth-child(5) {
+    animation-delay: 120ms;
+  }
+  .page .grid > :nth-child(6) {
+    animation-delay: 150ms;
+  }
+  .page .grid > :nth-child(n + 7) {
+    animation-delay: 180ms;
+  }
+
+  /* Feedback on pointer */
+  .btn {
+    transition:
+      transform 120ms var(--ease-out),
+      filter 150ms,
+      background-color 150ms;
+  }
+  .btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  .plan-item,
+  .resource,
+  .palette,
+  .tutorial {
+    transition:
+      transform 180ms var(--ease-out),
+      box-shadow 180ms,
+      border-color 180ms;
+  }
+  .plan-item:hover,
+  .resource:hover,
+  .palette:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -14px color-mix(in srgb, var(--ink) 55%, transparent);
+  }
+  nav.tabs a,
+  .opt,
+  .seg button,
+  .filters button {
+    transition:
+      color 160ms,
+      border-color 160ms,
+      background-color 160ms;
+  }
+
+  /* Progress fills from the left the first time it appears */
+  .bar > i,
+  .hbar .track i,
+  .preview-bar i {
+    animation: grow 700ms var(--ease-out) both;
+    transform-origin: left center;
+  }
+  .bars .col i {
+    animation: grow-up 600ms var(--ease-out) both;
+    transform-origin: center bottom;
+  }
+
+  /* Toast slides up instead of popping */
+  .toast {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+    transition:
+      opacity 200ms,
+      transform 200ms var(--ease-out),
+      visibility 200ms;
+  }
+  .toast.on {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  /* Revealed content fades in */
+  .reveal,
+  details[open] > :not(summary) {
+    animation: fade-in 220ms var(--ease-out) both;
+  }
+
+  /* A wrong kana answer nudges sideways */
+  .feedback.no {
+    animation: nudge 320ms var(--ease-out);
+  }
+  .feedback.ok {
+    animation: fade-in 200ms both;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes grow-up {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes nudge {
+  25% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}

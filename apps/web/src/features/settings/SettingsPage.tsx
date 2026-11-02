@@ -7,6 +7,7 @@ import { connect, disconnect, loadConnection, syncRequested } from "../../state/
 import { copyText, downloadText } from "../../ui/clipboard";
 import { relativeTime } from "../../ui/primitives";
 import { toast } from "../../ui/toast";
+import { AppearancePanel } from "./AppearancePanel";
 
 function Connection() {
   const { status } = useHub();
@@ -234,6 +235,8 @@ export default function SettingsPage() {
     <>
       <h2>Sincronización</h2>
       <Connection />
+      <h2>Apariencia</h2>
+      <AppearancePanel />
       <h2>Proceso automático y alertas</h2>
       <ScheduledJob />
       <h2>Tus fechas</h2>

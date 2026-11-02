@@ -68,6 +68,30 @@ export function demoState(today: string): HubState {
     busuu: { url: "", done: 12, total: 60, updatedAt: at },
     genki: { url: "", done: 3, total: 23, updatedAt: at },
   };
+  state.listening = [
+    {
+      id: "demo-teppei",
+      title: "Nihongo con Teppei (para principiantes)",
+      kind: "podcast",
+      level: "basico",
+      url: "https://nihongoconteppei.com",
+      done: 42,
+      total: 0,
+      catalogId: "teppei",
+      updatedAt: at,
+    },
+    {
+      id: "demo-shirokuma",
+      title: "しろくまカフェ (Polar Bear Café)",
+      kind: "anime",
+      level: "basico",
+      url: "",
+      done: 6,
+      total: 50,
+      catalogId: "shirokuma",
+      updatedAt: at,
+    },
+  ];
   state.anki = {
     syncedAt: at,
     deck: "Mainichi Hub",

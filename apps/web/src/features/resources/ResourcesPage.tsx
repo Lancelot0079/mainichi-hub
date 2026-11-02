@@ -143,7 +143,11 @@ function ResourceCard({ resource }: { resource: Resource }) {
       {resource.id === "anki" && <AnkiPanel />}
       <Configure resource={resource} />
       <div className="row">
-        <a className="btn small" href={href} target="_blank" rel="noopener noreferrer">
+        <a
+          className="btn small"
+          href={href}
+          {...(href.startsWith("#") ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+        >
           Abrir
         </a>
         <span className="row" role="group" aria-label={`Registrar tiempo en ${resource.name}`}>

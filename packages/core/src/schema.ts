@@ -23,6 +23,8 @@ const sessionSchema = z.object({
   minutes: z.number().nonnegative(),
   note: z.string().default(""),
   at: z.string(),
+  /** Item of the listening library the time was spent on. */
+  itemId: z.string().optional(),
   deletedAt: z.string().optional(),
 });
 export type ResourceSession = z.infer<typeof sessionSchema>;
@@ -156,6 +158,89 @@ export const settingsSchema = z.object({
 });
 export type Settings = z.infer<typeof settingsSchema>;
 
+export const listeningKindSchema = z.enum([
+  "podcast",
+  "video",
+  "anime",
+  "serie",
+  "pelicula",
+  "cancion",
+  "noticias",
+]);
+export type ListeningKind = z.infer<typeof listeningKindSchema>;
+
+export const listeningLevelSchema = z.enum(["inicial", "basico", "intermedio", "avanzado"]);
+export type ListeningLevel = z.infer<typeof listeningLevelSchema>;
+
+export const listeningItemSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1),
+  kind: listeningKindSchema,
+  level: listeningLevelSchema.default("inicial"),
+  url: z.string().default(""),
+  /** Episodes, chapters or plays completed, out of `total` when known. */
+  done: z.number().nonnegative().default(0),
+  total: z.number().nonnegative().default(0),
+  catalogId: z.string().optional(),
+  updatedAt: z.string().default(""),
+  deletedAt: z.string().optional(),
+});
+export type ListeningItem = z.infer<typeof listeningItemSchema>;
+
+export const examSectionSchema = z.enum(["I", "II", "III", "IV"]);
+export type ExamSection = z.infer<typeof examSectionSchema>;
+
+export const jlptLevelSchema = z.enum(["N5", "N4", "N3", "N2", "N1"]);
+export type JlptLevel = z.infer<typeof jlptLevelSchema>;
+
+export const examQuestionSchema = z.object({
+  id: z.string(),
+  section: examSectionSchema,
+  level: jlptLevelSchema,
+  passage: z.string().optional(),
+  prompt: z.string(),
+  options: z.array(z.string()).length(4),
+  answer: z.number().int().min(0).max(3),
+  explanation: z.string().default(""),
+});
+export type ExamQuestion = z.infer<typeof examQuestionSchema>;
+
+export const examAttemptSchema = z.object({
+  id: z.string(),
+  kind: z.enum(["simulacro", "seccion", "generado", "oficial"]),
+  label: z.string(),
+  at: z.string(),
+  durationSec: z.number().nonnegative().default(0),
+  score: z.number(),
+  max: z.number(),
+  sections: z.record(z.string(), z.object({ score: z.number(), max: z.number() })).default({}),
+  levels: z.record(z.string(), z.object({ right: z.number(), total: z.number() })).default({}),
+  /** Full questions are kept so the review works for generated sets too. */
+  mistakes: z
+    .array(z.object({ question: examQuestionSchema, chosen: z.number().nullable() }))
+    .default([]),
+  updatedAt: z.string().default(""),
+  deletedAt: z.string().optional(),
+});
+export type ExamAttempt = z.infer<typeof examAttemptSchema>;
+
+/** What an assistant returns when asked for new questions; mapped to `ExamQuestion`. */
+export const generatedExamSchema = z.object({
+  preguntas: z
+    .array(
+      z.object({
+        nivel: jlptLevelSchema.catch("N4"),
+        pasaje: z.coerce.string().default(""),
+        enunciado: z.string().min(1),
+        opciones: z.array(z.coerce.string()).length(4),
+        correcta: z.coerce.number().int().min(0).max(3),
+        explicacion: z.coerce.string().default(""),
+      }),
+    )
+    .min(1)
+    .max(20),
+});
+
 export const hubStateSchema = z.object({
   version: z.literal(STATE_VERSION).default(STATE_VERSION),
   updatedAt: z.string().default(""),
@@ -163,6 +248,8 @@ export const hubStateSchema = z.object({
   cards: z.array(cardSchema).default([]),
   diary: z.array(diaryEntrySchema).default([]),
   resources: z.record(z.string(), resourceTrackSchema).default({}),
+  listening: z.array(listeningItemSchema).default([]),
+  exams: z.array(examAttemptSchema).default([]),
   settings: settingsSchema.prefault({}),
   anki: ankiStatsSchema.nullable().default(null),
 });
@@ -218,15 +305,3 @@ export const draftCardsSchema = z
   )
   .max(25);
 export type DraftCard = z.infer<typeof draftCardsSchema>[number];
-
-export const quizSchema = z
-  .array(
-    z.object({
-      q: z.string(),
-      opts: z.array(z.coerce.string()).min(2),
-      a: z.coerce.number().int().nonnegative(),
-      exp: z.coerce.string().default(""),
-    }),
-  )
-  .max(5);
-export type QuizQuestion = z.infer<typeof quizSchema>[number];

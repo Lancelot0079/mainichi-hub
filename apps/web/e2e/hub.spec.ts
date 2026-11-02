@@ -1,7 +1,18 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const ROUTES = ["hoy", "recursos", "kana", "tarjetas", "diario", "progreso", "ajustes"];
+const ROUTES = [
+  "hoy",
+  "recursos",
+  "escucha",
+  "kana",
+  "tarjetas",
+  "diario",
+  "examen",
+  "progreso",
+  "ajustes",
+  "guia",
+];
 
 let cspViolations: string[] = [];
 
@@ -141,10 +152,72 @@ test("the page has no horizontal scroll", async ({ page }) => {
   }
 });
 
+test("a listening session logs time to the routine and creates cards", async ({ page }) => {
+  await page.goto("/#escucha");
+  await page.getByRole("button", { name: "Agregar" }).first().click();
+  await expect(page.getByText("1 elementos")).toBeVisible();
+  await page.getByRole("button", { name: "+10 min" }).click();
+  await expect(page.getByText("10 min de escucha registrados.")).toBeVisible();
+  await page.getByLabel("Palabra o frase").fill("いただきます");
+  await page.getByLabel("Significado").fill("buen provecho");
+  await page.getByRole("button", { name: "Crear tarjeta" }).click();
+  await page.goto("/#hoy");
+  await expect(page.getByText("10 de 55 min")).toBeVisible();
+  await page.goto("/#tarjetas");
+  await expect(page.getByText("1 tarjetas", { exact: true })).toBeVisible();
+});
+
+test("an exam section is graded with the official weights and explained", async ({ page }) => {
+  await page.goto("/#examen");
+  await page.getByRole("button", { name: "IV · Comprensión de lectura" }).click();
+  await expect(page.getByText("次の文章を読んで")).toBeVisible();
+  const first = page.getByRole("group").filter({ hasText: "なぜ" });
+  await first.getByRole("radio").first().check();
+  await page.getByRole("button", { name: "Terminar y calificar" }).last().click();
+  await expect(page.getByText("/ 12")).toBeVisible();
+  await expect(page.getByText("Repaso de errores")).toBeVisible();
+  await page.getByRole("button", { name: "Volver a exámenes" }).click();
+  await expect(page.getByText("3/12")).toBeVisible();
+});
+
+test("a generated exam reply is validated before it runs", async ({ page }) => {
+  await page.goto("/#examen");
+  const reply = page.getByLabel("Respuesta del asistente");
+  await reply.fill('{"preguntas":[{"enunciado":"x","opciones":["a","b"],"correcta":0}]}');
+  await page.getByRole("button", { name: "Usar la respuesta" }).click();
+  await expect(page.getByText("La respuesta no tiene el formato esperado.")).toBeVisible();
+  await reply.fill(
+    '{"preguntas":[{"nivel":"N5","enunciado":"ねこ＿＿います。","opciones":["が","を","で","へ"],"correcta":0,"explicacion":"が marca el sujeto."}]}',
+  );
+  await page.getByRole("button", { name: "Usar la respuesta" }).click();
+  await expect(page.getByText("0 de 1 respondidas")).toBeVisible();
+});
+
+test("the chosen palette persists and stays accessible", async ({ page }) => {
+  // Contrast is audited on the final colors, not mid-way through a fade-in.
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/#ajustes");
+  await page.getByRole("button", { name: /Matcha/ }).click();
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-palette", "matcha");
+  await page.getByRole("button", { name: "Oscuro" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  const results = await new AxeBuilder({ page }).withRules(["color-contrast"]).analyze();
+  expect(results.violations).toEqual([]);
+});
+
+test("the guide lists what is still missing", async ({ page }) => {
+  await page.goto("/#guia");
+  await expect(page.getByText("Sincronizar tus dispositivos")).toBeVisible();
+  await page.getByText("Crear tarjetas desde tus apuntes").click();
+  await expect(page.getByText("Crear desde el formato").first()).toBeVisible();
+});
+
 for (const route of ROUTES) {
   test(`${route} has no accessibility violations`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(`/?demo#${route}`);
-    await expect(page.getByRole("main")).not.toBeEmpty();
+    await expect(page.getByText("Cargando…")).toBeHidden();
     const results = await new AxeBuilder({ page }).analyze();
     expect(
       results.violations.flatMap((v) =>

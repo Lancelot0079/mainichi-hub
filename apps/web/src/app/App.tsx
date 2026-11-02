@@ -14,6 +14,12 @@ const ROUTES = [
     label: "Recursos",
     Page: page(() => import("../features/resources/ResourcesPage")),
   },
+  {
+    id: "escucha",
+    jp: "聴解",
+    label: "Escucha",
+    Page: page(() => import("../features/listening/ListeningPage")),
+  },
   { id: "kana", jp: "仮名", label: "Kana", Page: page(() => import("../features/kana/KanaPage")) },
   {
     id: "tarjetas",
@@ -28,6 +34,12 @@ const ROUTES = [
     Page: page(() => import("../features/diary/DiaryPage")),
   },
   {
+    id: "examen",
+    jp: "試験",
+    label: "Examen",
+    Page: page(() => import("../features/exam/ExamPage")),
+  },
+  {
     id: "progreso",
     jp: "記録",
     label: "Progreso",
@@ -38,6 +50,13 @@ const ROUTES = [
     jp: "設定",
     label: "Ajustes",
     Page: page(() => import("../features/settings/SettingsPage")),
+  },
+  {
+    id: "guia",
+    jp: "案内",
+    label: "Guía",
+    Page: page(() => import("../features/guide/GuidePage")),
+    hidden: true,
   },
 ] as const;
 
@@ -106,10 +125,19 @@ export function App() {
             </h1>
             <span>Tu hub de japonés · rumbo al JLPT</span>
           </div>
-          <StatusPill status={status} />
+          <div className="row">
+            <a
+              className="pill"
+              href="#guia"
+              aria-current={route.id === "guia" ? "page" : undefined}
+            >
+              <span lang="ja">案内</span> Guía
+            </a>
+            <StatusPill status={status} />
+          </div>
         </header>
         <nav className="tabs" aria-label="Secciones">
-          {ROUTES.map((r) => (
+          {ROUTES.filter((r) => !("hidden" in r)).map((r) => (
             <a key={r.id} href={`#${r.id}`} aria-current={r.id === route.id ? "page" : undefined}>
               <Jp className="jp">{r.jp}</Jp>
               {r.label}
@@ -124,7 +152,9 @@ export function App() {
             </div>
           )}
           <Suspense fallback={<p className="muted">Cargando…</p>}>
-            <Page />
+            <div key={route.id} className="page">
+              <Page />
+            </div>
           </Suspense>
         </main>
       </div>

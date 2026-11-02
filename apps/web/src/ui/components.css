@@ -51,7 +51,7 @@ nav.tabs {
 nav.tabs a {
   text-decoration: none;
   color: var(--muted);
-  padding: 10px 12px;
+  padding: 10px 8px;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
   font-weight: 500;

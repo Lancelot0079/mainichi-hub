@@ -16,6 +16,11 @@ sincronización entre dispositivos sin conflictos y ningún servidor que mantene
   clic y seguimiento de avance.
 - **Herramientas de práctica**: entrenador de kana, tarjetas con repetición espaciada, diario de
   oraciones y temporizadores de rutina.
+- **Biblioteca de escucha**: podcasts, anime, canciones, películas y noticias con sesiones guiadas
+  que registran tu tiempo y convierten lo que oyes en tarjetas.
+- **Exámenes estilo MEXT**: 48 preguntas originales con el formato oficial (secciones, puntajes y
+  100 minutos), resultados por nivel y registro de exámenes oficiales.
+- **Guía integrada** con lista de configuración en vivo, y cinco paletas en modo claro y oscuro.
 - **Sincronización automática** cada hora con GitHub Actions, sin servidor.
 - **Alertas push**: un plan cada mañana y, solo si no has estudiado, un recordatorio cada noche.
 - **Funciona sin conexión** como PWA instalable, y sincroniza entre dispositivos sin perder cambios.

@@ -76,6 +76,15 @@ export const RESOURCES: readonly Resource[] = [
     defaultTotal: 23,
   },
   {
+    id: "escucha",
+    name: "Biblioteca de escucha",
+    jp: "耳",
+    description: "Tus podcasts, anime, canciones y películas, con sesiones guiadas.",
+    url: "#escucha",
+    mode: "manual",
+    block: "lis",
+  },
+  {
     id: "teppei",
     name: "Nihongo con Teppei",
     jp: "聴",

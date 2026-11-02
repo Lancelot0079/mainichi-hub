@@ -4,12 +4,8 @@ import {
   cardsPrompt,
   draftCardsSchema,
   liveCards,
-  quizPrompt,
-  quizSchema,
-  type Card,
   type CardRating,
   type DraftCard,
-  type QuizQuestion,
 } from "@mainichi/core";
 import { AnkiConnectClient } from "@mainichi/integrations";
 import { useState } from "react";
@@ -23,7 +19,6 @@ import { ankiErrorMessage } from "../resources/AnkiPanel";
 
 const MAX_NOTES_LENGTH = 12_000;
 const KNOWN_WORDS_IN_PROMPT = 150;
-const QUIZ_DECK_SIZE = 40;
 
 function Review() {
   const { state, today } = useHub();
@@ -64,7 +59,7 @@ function Review() {
         )}
         {shown ? (
           <>
-            <div className="mt">
+            <div className="mt reveal">
               <Jp className="reading">{card.reading}</Jp>
               <div>
                 <b>{card.meaning}</b>
@@ -268,79 +263,6 @@ function AnkiExport() {
   );
 }
 
-function Quiz({ questions }: { questions: QuizQuestion[] }) {
-  const [answers, setAnswers] = useState<Record<number, number>>({});
-  const answered = Object.keys(answers).length;
-  const score = questions.filter((q, i) => answers[i] === q.a).length;
-  return (
-    <div>
-      {questions.map((question, i) => {
-        const chosen = answers[i];
-        return (
-          <div key={question.q}>
-            <div className="quiz-q">
-              {i + 1}. <Jp className="display">{question.q}</Jp>
-            </div>
-            {question.opts.map((option, j) => {
-              const state =
-                chosen === undefined
-                  ? ""
-                  : j === question.a
-                    ? "right"
-                    : j === chosen
-                      ? "wrong"
-                      : "";
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  className={`opt ${state}`}
-                  disabled={chosen !== undefined}
-                  onClick={() => setAnswers({ ...answers, [i]: j })}
-                >
-                  <Jp>{option}</Jp>
-                </button>
-              );
-            })}
-            {chosen !== undefined && <div className="muted small">{question.exp}</div>}
-          </div>
-        );
-      })}
-      {answered === questions.length && (
-        <p role="status">
-          <b>
-            Resultado: {score} de {questions.length}
-          </b>
-        </p>
-      )}
-    </div>
-  );
-}
-
-function MiniExam() {
-  const { state } = useHub();
-  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  return (
-    <div className="panel stack">
-      <p className="hint">Un asistente arma 5 preguntas con tus tarjetas, al estilo del JLPT N5.</p>
-      <AssistantBridge
-        copyLabel="Copiar prompt del examen"
-        emptyMessage=""
-        schema={quizSchema}
-        buildPrompt={() =>
-          quizPrompt(
-            liveCards(state.cards)
-              .slice(-QUIZ_DECK_SIZE)
-              .map((c: Card) => `${c.jp} (${c.reading}) = ${c.meaning}`),
-          )
-        }
-        onResult={setQuestions}
-      />
-      {questions.length > 0 && <Quiz questions={questions} />}
-    </div>
-  );
-}
-
 function Deck() {
   const { state } = useHub();
   const [search, setSearch] = useState("");
@@ -410,8 +332,6 @@ export default function CardsPage() {
       <NotesToCards />
       <h2>Llevar a Anki</h2>
       <AnkiExport />
-      <h2>Mini examen tipo N5</h2>
-      <MiniExam />
       <Deck />
     </>
   );

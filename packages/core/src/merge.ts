@@ -3,8 +3,10 @@ import type {
   Card,
   DayLog,
   DiaryEntry,
+  ExamAttempt,
   HubState,
   KanaRecord,
+  ListeningItem,
   ResourceSession,
   ResourceTrack,
 } from "./schema";
@@ -115,6 +117,8 @@ export function mergeStates(a: HubState, b: HubState): HubState {
     cards: mergeById<Card>(a.cards, b.cards, pickVersion),
     diary: mergeById<DiaryEntry>(a.diary, b.diary, pickVersion),
     resources: mergeRecord<ResourceTrack>(a.resources, b.resources, newer),
+    listening: mergeById<ListeningItem>(a.listening, b.listening, pickVersion),
+    exams: mergeById<ExamAttempt>(a.exams, b.exams, pickVersion),
     settings: newer(latest.settings, older.settings),
     anki: !a.anki
       ? b.anki

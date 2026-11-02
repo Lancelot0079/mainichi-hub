@@ -17,6 +17,11 @@ conflict-free multi-device sync and no servers to run.
 - **Resource hub** with every platform in one place: direct links, one-click time logging and
   progress tracking.
 - **Practice tools**: kana trainer, spaced-repetition cards, a sentence diary, and routine timers.
+- **Listening library**: podcasts, anime, songs, films and news with guided four-step sessions
+  that log time and turn what you hear into flashcards.
+- **MEXT-style exams**: an original 48-question practice set that mirrors the official Japanese
+  test (sections, weights, 100 minutes), per-level results, and tracking of official papers.
+- **Built-in guide** with a live setup checklist, plus five color palettes in light and dark.
 - **Automatic sync** every hour through GitHub Actions, with no server to maintain.
 - **Push alerts**: a plan each morning and, only if you have not studied, a reminder each evening.
 - **Works offline** as an installable PWA, and syncs between devices without losing edits.

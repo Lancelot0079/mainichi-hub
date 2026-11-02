@@ -92,8 +92,7 @@ function BlockCard({ block }: { block: Block }) {
           <a
             key={r.id}
             href={safeUrl(state.resources[r.id]?.url ?? "", r.url)}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...(r.url.startsWith("#") ? {} : { target: "_blank", rel: "noopener noreferrer" })}
           >
             {r.name}
           </a>

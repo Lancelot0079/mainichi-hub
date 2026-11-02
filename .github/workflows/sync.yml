@@ -1,0 +1,46 @@
+name: Sync and alerts
+
+# Runs hourly and decides from the clock which alert is due, so a delayed or dropped run only
+# postpones an alert to the next hour. Minute 17 avoids the top of the hour, when GitHub's
+# schedule queue is under the highest load.
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: Alert to send
+        type: choice
+        default: auto
+        options: [auto, none, morning, evening]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --omit=dev --ignore-scripts
+      - run: npm run sync -- --slot="$SLOT"
+        env:
+          SLOT: ${{ inputs.slot || 'auto' }}
+          DATA_REPO: ${{ secrets.DATA_REPO }}
+          DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+          WANIKANI_TOKEN: ${{ secrets.WANIKANI_TOKEN }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          NTFY_SERVER: ${{ vars.NTFY_SERVER }}
+          HUB_URL: ${{ vars.HUB_URL }}
+          HUB_TIMEZONE: ${{ vars.HUB_TIMEZONE }}
+          ALERT_MORNING_HOUR: ${{ vars.ALERT_MORNING_HOUR }}
+          ALERT_EVENING_HOUR: ${{ vars.ALERT_EVENING_HOUR }}

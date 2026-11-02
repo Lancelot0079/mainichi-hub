@@ -1,0 +1,133 @@
+:root {
+  /* Cuaderno de práctica: papel de genkō yōshi, tinta índigo, sello bermellón para cada día cumplido */
+  --paper: #f1f2ee;
+  --surface: #ffffff;
+  --ink: #1c2333;
+  --muted: #5b6273;
+  --rule: #d7dad1;
+  --ai: #2e4a7d;
+  --on-ai: #ffffff;
+  --shu: #c2412f;
+  --on-shu: #ffffff;
+  --ok: #2d7a57;
+  --warn: #8f5a0e;
+  --font-display: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-body: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12161f;
+    --surface: #1a202b;
+    --ink: #e7e5de;
+    --muted: #a2a8b4;
+    --rule: #2a3243;
+    --ai: #93aee0;
+    --on-ai: #12161f;
+    --shu: #e46650;
+    --on-shu: #12161f;
+    --ok: #5dba8d;
+    --warn: #e0a24a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #12161f;
+  --surface: #1a202b;
+  --ink: #e7e5de;
+  --muted: #a2a8b4;
+  --rule: #2a3243;
+  --ai: #93aee0;
+  --on-ai: #12161f;
+  --shu: #e46650;
+  --on-shu: #12161f;
+  --ok: #5dba8d;
+  --warn: #e0a24a;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a,
+button,
+input,
+textarea,
+label {
+  touch-action: manipulation;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--rule) 55%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--rule) 55%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 28px 28px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+a {
+  color: var(--ai);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ai);
+  outline-offset: 2px;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 22px;
+  margin: 26px 0 10px;
+  text-wrap: balance;
+}
+
+h2 small {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--muted);
+  margin-left: 8px;
+}
+
+h3 {
+  font-size: 15px;
+  margin: 0 0 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

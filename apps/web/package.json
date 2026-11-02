@@ -1,0 +1,31 @@
+{
+  "name": "@mainichi/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@fontsource/shippori-mincho-b1": "^5.0.0",
+    "@fontsource/zen-kaku-gothic-new": "^5.0.0",
+    "@mainichi/core": "*",
+    "@mainichi/integrations": "*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.0.0",
+    "@playwright/test": "^1.50.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "vite": "^8.0.0",
+    "vite-plugin-pwa": "^2.0.0"
+  }
+}

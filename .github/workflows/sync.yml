@@ -25,14 +25,24 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      # Until the data token is configured, runs succeed without doing anything, so a fresh
+      # fork or setup does not fail every hour.
+      CONFIGURED: ${{ secrets.DATA_REPO_TOKEN != '' }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - if: env.CONFIGURED != 'true'
+        run: echo "::notice::Falta el secreto DATA_REPO_TOKEN; ver docs/setup.md"
+      - if: env.CONFIGURED == 'true'
+        uses: actions/checkout@v4
+      - if: env.CONFIGURED == 'true'
+        uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: npm ci --omit=dev --ignore-scripts
-      - run: npm run sync -- --slot="$SLOT"
+      - if: env.CONFIGURED == 'true'
+        run: npm ci --omit=dev --ignore-scripts
+      - if: env.CONFIGURED == 'true'
+        run: npm run sync -- --slot="$SLOT"
         env:
           SLOT: ${{ inputs.slot || 'auto' }}
           DATA_REPO: ${{ secrets.DATA_REPO }}

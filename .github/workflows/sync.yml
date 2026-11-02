@@ -33,7 +33,7 @@ jobs:
       - if: env.CONFIGURED != 'true'
         run: echo "::notice::Falta el secreto DATA_REPO_TOKEN; ver docs/setup.md"
       - if: env.CONFIGURED == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - if: env.CONFIGURED == 'true'
         uses: actions/setup-node@v4
         with:

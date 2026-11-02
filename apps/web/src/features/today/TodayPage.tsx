@@ -54,7 +54,7 @@ function StaleJobNotice() {
 function PlanCard({ item }: { item: PlanItem }) {
   const external = item.external ? { target: "_blank", rel: "noopener noreferrer" } : {};
   return (
-    <a className="panel plan-item" href={item.href} {...external}>
+    <a className={`panel plan-item cat-${item.block}`} href={item.href} {...external}>
       <Jp className="glyph">{item.jp}</Jp>
       <span>
         <b>{item.title}</b>
@@ -76,7 +76,7 @@ function BlockCard({ block }: { block: Block }) {
   const seconds = isRunning ? running.secondsLeft : block.minutes * 60;
 
   return (
-    <div className={`panel block ${done ? "done" : ""}`}>
+    <div className={`panel block cat-${block.id} ${done ? "done" : ""}`}>
       {done && (
         <span className="stamp">
           <Hanko state="full" small />

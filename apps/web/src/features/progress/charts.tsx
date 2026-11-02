@@ -1,5 +1,6 @@
 import {
   addDays,
+  BLOCKS,
   DAILY_TARGET_MINUTES,
   dayComplete,
   dayMinutes,
@@ -7,6 +8,7 @@ import {
   parseYmd,
   resourceById,
   liveSessions,
+  type BlockId,
   type HubState,
   type WanikaniSnapshot,
 } from "@mainichi/core";
@@ -122,12 +124,14 @@ export function WeeklyBars({ state, today }: { state: HubState; today: string })
   );
 }
 
-function HorizontalBars({ rows, unit }: { rows: Array<[string, number]>; unit: string }) {
+type BarRow = [label: string, value: number, tone?: BlockId];
+
+function HorizontalBars({ rows, unit }: { rows: BarRow[]; unit: string }) {
   const max = Math.max(1, ...rows.map(([, value]) => value));
   return (
     <div className="hbars">
-      {rows.map(([label, value]) => (
-        <div key={label} className="hbar">
+      {rows.map(([label, value, tone]) => (
+        <div key={label} className={`hbar ${tone ? `cat-${tone}` : ""}`}>
           <span>{label}</span>
           <div className="track" aria-hidden="true">
             <i style={{ width: `${(value / max) * 100}%` }} />
@@ -150,11 +154,26 @@ export function ResourceTime({ state, today }: { state: HubState; today: string 
   }
   const rows = [...totals.entries()]
     .sort((a, b) => b[1] - a[1])
-    .map(([id, minutes]): [string, number] => [resourceById(id)?.name ?? id, minutes]);
+    .map(([id, minutes]): BarRow => {
+      const resource = resourceById(id);
+      return [resource?.name ?? id, minutes, resource?.block];
+    });
   if (!rows.length) {
     return <p className="muted">Registra sesiones en Recursos para ver a qué dedicas tu tiempo.</p>;
   }
-  return <HorizontalBars rows={rows} unit="min" />;
+  return (
+    <>
+      <HorizontalBars rows={rows} unit="min" />
+      <div className="legend" aria-label="Color por bloque de la rutina">
+        {BLOCKS.map((block) => (
+          <span key={block.id} className={`cat-${block.id}`}>
+            <i className="swatch" />
+            {block.title}
+          </span>
+        ))}
+      </div>
+    </>
+  );
 }
 
 export function WanikaniStages({ data }: { data: WanikaniSnapshot }) {

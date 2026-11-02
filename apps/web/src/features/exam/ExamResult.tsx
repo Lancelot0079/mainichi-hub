@@ -62,7 +62,7 @@ export function ExamResult({ attempt, onBack }: { attempt: ExamAttempt; onBack: 
             {MEXT_SECTIONS.filter((s) => attempt.sections[s.id]).map((s) => {
               const stats = attempt.sections[s.id]!;
               return (
-                <div key={s.id} className="hbar">
+                <div key={s.id} className={`hbar cat-${s.tone}`}>
                   <span>
                     {s.id} · {s.title}
                   </span>

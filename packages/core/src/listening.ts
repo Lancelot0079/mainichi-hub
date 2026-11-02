@@ -1,4 +1,4 @@
-import type { ListeningKind, ListeningLevel } from "./schema";
+import type { BlockId, ListeningKind, ListeningLevel } from "./schema";
 
 export interface ListeningKindInfo {
   id: ListeningKind;
@@ -235,6 +235,17 @@ export function listeningLink(item: { url?: string; title: string; kind: Listeni
     ? `https://www.google.com/search?q=${query}+d%C3%B3nde+ver`
     : `https://www.youtube.com/results?search_query=${query}`;
 }
+
+/** Color family per kind, so the library reads at a glance; the label always names the kind. */
+export const KIND_BLOCK: Record<ListeningKind, BlockId> = {
+  podcast: "lis",
+  cancion: "lis",
+  video: "les",
+  noticias: "les",
+  anime: "out",
+  serie: "out",
+  pelicula: "srs",
+};
 
 export const kindInfo = (kind: ListeningKind) =>
   LISTENING_KINDS.find((k) => k.id === kind) ?? (LISTENING_KINDS[0] as ListeningKindInfo);

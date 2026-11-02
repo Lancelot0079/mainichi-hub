@@ -1,10 +1,12 @@
 import { blockDone, BLOCKS, currentStreak, dayActive, type Block } from "./activity";
 import { addDays, daysBetween } from "./dates";
-import type { AlertSlot, HubState, Milestone, Snapshot } from "./schema";
+import type { AlertSlot, BlockId, HubState, Milestone, Snapshot } from "./schema";
 import { cardsDue, kanaDue } from "./srs";
 
 export interface PlanItem {
   id: string;
+  /** Routine block the item belongs to, which gives it its color. */
+  block: BlockId;
   jp: string;
   title: string;
   detail: string;
@@ -45,6 +47,7 @@ export function dailyPlan(state: HubState, snapshot: Snapshot, today: string): D
   if (wanikani) {
     items.push({
       id: "wanikani",
+      block: "srs",
       jp: "鰐",
       title: `${wanikani.reviewsAvailable} repasos en WaniKani`,
       detail: `${wanikani.lessonsAvailable} lecciones nuevas · nivel ${wanikani.level}`,
@@ -57,6 +60,7 @@ export function dailyPlan(state: HubState, snapshot: Snapshot, today: string): D
     const due = state.anki.dueNew + state.anki.dueLearn + state.anki.dueReview;
     items.push({
       id: "anki",
+      block: "srs",
       jp: "暗",
       title: `${due} tarjetas en Anki`,
       detail: `Mazo ${state.anki.deck}, según la última conexión`,
@@ -68,6 +72,7 @@ export function dailyPlan(state: HubState, snapshot: Snapshot, today: string): D
   const kana = kanaDue(state, "h", today).length + kanaDue(state, "k", today).length;
   items.push({
     id: "kana",
+    block: "srs",
     jp: "仮名",
     title: `${kana} kana por repasar`,
     detail: kana ? "Unos 3 minutos" : "Nada pendiente; puedes hacer práctica libre",
@@ -78,6 +83,7 @@ export function dailyPlan(state: HubState, snapshot: Snapshot, today: string): D
   const cards = cardsDue(state.cards, today).length;
   items.push({
     id: "cards",
+    block: "les",
     jp: "単語",
     title: `${cards} tarjetas por repasar`,
     detail: cards ? "Cuenta para el bloque de repaso" : "Agrega tarjetas desde tus apuntes",
@@ -88,6 +94,7 @@ export function dailyPlan(state: HubState, snapshot: Snapshot, today: string): D
   const wrote = state.diary.some((e) => e.date === today && !e.deletedAt);
   items.push({
     id: "diary",
+    block: "out",
     jp: "日記",
     title: wrote ? "Diario escrito hoy" : "Diario sin escribir",
     detail: wrote ? "Bien hecho" : "Tema del día listo",

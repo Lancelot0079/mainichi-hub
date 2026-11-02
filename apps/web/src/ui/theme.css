@@ -11,6 +11,10 @@
   --on-shu: #ffffff;
   --ok: #2d7a57;
   --warn: #8f5a0e;
+  --c-srs: #158353;
+  --c-les: #1577c8;
+  --c-out: #ac5d13;
+  --c-lis: #c63895;
   --font-display: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
   --font-body: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
   color-scheme: light;
@@ -29,6 +33,10 @@
     --on-shu: #12161f;
     --ok: #5dba8d;
     --warn: #e0a24a;
+    --c-srs: #05ab86;
+    --c-les: #528dff;
+    --c-out: #d27908;
+    --c-lis: #e253ae;
     color-scheme: dark;
   }
 }
@@ -45,6 +53,10 @@
   --on-shu: #12161f;
   --ok: #5dba8d;
   --warn: #e0a24a;
+  --c-srs: #05ab86;
+  --c-les: #528dff;
+  --c-out: #d27908;
+  --c-lis: #e253ae;
   color-scheme: dark;
 }
 

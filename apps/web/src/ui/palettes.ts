@@ -11,6 +11,11 @@ export interface Tokens {
   onShu: string;
   ok: string;
   warn: string;
+  /** One identity color per part of the routine: review, lesson, writing, listening. */
+  srs: string;
+  les: string;
+  out: string;
+  lis: string;
 }
 
 export interface Palette {
@@ -23,8 +28,8 @@ export interface Palette {
 }
 
 /**
- * Each palette borrows from a traditional Japanese color family. Contrast is checked in
- * `palettes.test.ts`, so every pairing used for text stays readable in both modes.
+ * Each palette borrows from a traditional Japanese color family. Contrast and color-blind
+ * separation are checked in `palettes.test.ts` and with the data-viz validator.
  */
 export const PALETTES: readonly Palette[] = [
   {
@@ -44,6 +49,10 @@ export const PALETTES: readonly Palette[] = [
       onShu: "#ffffff",
       ok: "#2d7a57",
       warn: "#8f5a0e",
+      srs: "#158353",
+      les: "#1577c8",
+      out: "#ac5d13",
+      lis: "#c63895",
     },
     dark: {
       paper: "#12161f",
@@ -57,6 +66,10 @@ export const PALETTES: readonly Palette[] = [
       onShu: "#12161f",
       ok: "#5dba8d",
       warn: "#e0a24a",
+      srs: "#05ab86",
+      les: "#528dff",
+      out: "#d27908",
+      lis: "#e253ae",
     },
   },
   {
@@ -76,6 +89,10 @@ export const PALETTES: readonly Palette[] = [
       onShu: "#ffffff",
       ok: "#1f6b75",
       warn: "#87570b",
+      srs: "#04844d",
+      les: "#0278c7",
+      out: "#ad5c15",
+      lis: "#aa55a4",
     },
     dark: {
       paper: "#141712",
@@ -89,6 +106,10 @@ export const PALETTES: readonly Palette[] = [
       onShu: "#141712",
       ok: "#6cc3c9",
       warn: "#e0a84a",
+      srs: "#23ac6a",
+      les: "#3797e9",
+      out: "#d67523",
+      lis: "#c46dbd",
     },
   },
   {
@@ -108,6 +129,10 @@ export const PALETTES: readonly Palette[] = [
       onShu: "#ffffff",
       ok: "#2d7a57",
       warn: "#8f5a0e",
+      srs: "#14844a",
+      les: "#0d7ac1",
+      out: "#b15901",
+      lis: "#cd3380",
     },
     dark: {
       paper: "#1a1418",
@@ -121,6 +146,10 @@ export const PALETTES: readonly Palette[] = [
       onShu: "#1a1418",
       ok: "#6cc79a",
       warn: "#e3a653",
+      srs: "#1daa8d",
+      les: "#5e8aff",
+      out: "#cc7d1e",
+      lis: "#ea5098",
     },
   },
   {
@@ -140,6 +169,10 @@ export const PALETTES: readonly Palette[] = [
       onShu: "#ffffff",
       ok: "#2d7a57",
       warn: "#8f5a0e",
+      srs: "#128537",
+      les: "#197cb3",
+      out: "#bd5a03",
+      lis: "#bd3da8",
     },
     dark: {
       paper: "#0e1a20",
@@ -153,6 +186,130 @@ export const PALETTES: readonly Palette[] = [
       onShu: "#0e1a20",
       ok: "#63c29a",
       warn: "#e0a24a",
+      srs: "#05b047",
+      les: "#069ce4",
+      out: "#e16d08",
+      lis: "#d858c2",
+    },
+  },
+  {
+    id: "momiji",
+    name: "Otoño",
+    jp: "紅葉",
+    description: "Hojas de arce en noviembre: óxido, rojo y oro sobre papel crema.",
+    light: {
+      paper: "#f6f0ea",
+      surface: "#fffdfa",
+      ink: "#2a1d17",
+      muted: "#6a564b",
+      rule: "#e3d5c8",
+      ai: "#9a3412",
+      onAi: "#ffffff",
+      shu: "#b91c1c",
+      onShu: "#ffffff",
+      ok: "#3f7d3a",
+      warn: "#8a5a00",
+      srs: "#14844a",
+      les: "#0d7ac1",
+      out: "#b15901",
+      lis: "#c4447a",
+    },
+    dark: {
+      paper: "#19120e",
+      surface: "#221813",
+      ink: "#f2e8df",
+      muted: "#b8a596",
+      rule: "#3a2c22",
+      ai: "#f4a26b",
+      onAi: "#19120e",
+      shu: "#f87171",
+      onShu: "#19120e",
+      ok: "#86c17f",
+      warn: "#e5b252",
+      srs: "#1daa8d",
+      les: "#618bf9",
+      out: "#cc7d1e",
+      lis: "#e05e92",
+    },
+  },
+  {
+    id: "fuji",
+    name: "Glicina",
+    jp: "藤",
+    description: "Violeta de glicina y rosa. Suave pero con mucho color.",
+    light: {
+      paper: "#f3f1f8",
+      surface: "#ffffff",
+      ink: "#221d33",
+      muted: "#5f5975",
+      rule: "#dcd6ea",
+      ai: "#5b3fa0",
+      onAi: "#ffffff",
+      shu: "#b4386c",
+      onShu: "#ffffff",
+      ok: "#2d7a57",
+      warn: "#8f5a0e",
+      srs: "#14844a",
+      les: "#0d7ac1",
+      out: "#b15901",
+      lis: "#ac47c2",
+    },
+    dark: {
+      paper: "#15121f",
+      surface: "#1d1a2b",
+      ink: "#ebe7f5",
+      muted: "#aaa3c2",
+      rule: "#2e2a44",
+      ai: "#b9a5f0",
+      onAi: "#15121f",
+      shu: "#f08ab3",
+      onShu: "#15121f",
+      ok: "#6cc79a",
+      warn: "#e3a653",
+      srs: "#15aa8f",
+      les: "#6389ff",
+      out: "#cc7d1b",
+      lis: "#c661dc",
+    },
+  },
+  {
+    id: "yuyake",
+    name: "Atardecer",
+    jp: "夕焼け",
+    description: "Magenta y naranja de atardecer. La más vibrante.",
+    light: {
+      paper: "#faf3ee",
+      surface: "#ffffff",
+      ink: "#2b1b24",
+      muted: "#6b5560",
+      rule: "#ecd9d2",
+      ai: "#7a2e6e",
+      onAi: "#ffffff",
+      shu: "#c2410c",
+      onShu: "#ffffff",
+      ok: "#2d7a57",
+      warn: "#8f5a0e",
+      srs: "#14844a",
+      les: "#0d7ac1",
+      out: "#b15901",
+      lis: "#d0268c",
+    },
+    dark: {
+      paper: "#1b1218",
+      surface: "#251922",
+      ink: "#f6e9ef",
+      muted: "#c0a8b5",
+      rule: "#3d2b37",
+      ai: "#e8a6dc",
+      onAi: "#1b1218",
+      shu: "#fb923c",
+      onShu: "#1b1218",
+      ok: "#6cc79a",
+      warn: "#e3a653",
+      srs: "#0baa92",
+      les: "#6887ff",
+      out: "#cb7e19",
+      lis: "#ed46a5",
     },
   },
   {
@@ -172,6 +329,10 @@ export const PALETTES: readonly Palette[] = [
       onShu: "#ffffff",
       ok: "#2d6a4f",
       warn: "#8f3b1b",
+      srs: "#13825d",
+      les: "#4275b9",
+      out: "#a7601d",
+      lis: "#a45d99",
     },
     dark: {
       paper: "#111111",
@@ -185,6 +346,10 @@ export const PALETTES: readonly Palette[] = [
       onShu: "#111111",
       ok: "#6dbf95",
       warn: "#e3a653",
+      srs: "#39a97e",
+      les: "#5f94da",
+      out: "#c87e3f",
+      lis: "#bd75b2",
     },
   },
 ];
@@ -204,7 +369,13 @@ const CSS_NAMES: Record<keyof Tokens, string> = {
   onShu: "--on-shu",
   ok: "--ok",
   warn: "--warn",
+  srs: "--c-srs",
+  les: "--c-les",
+  out: "--c-out",
+  lis: "--c-lis",
 };
 
 export const cssVariables = (tokens: Tokens): Record<string, string> =>
   Object.fromEntries(Object.entries(tokens).map(([k, v]) => [CSS_NAMES[k as keyof Tokens], v]));
+
+export const CATEGORY_KEYS = ["srs", "les", "out", "lis"] as const;

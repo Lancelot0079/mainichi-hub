@@ -117,7 +117,7 @@ export function ExamRunner({
         const questions = config.questions.filter((q) => q.section === section.id);
         if (!questions.length) return null;
         return (
-          <section key={section.id} className="exam-section">
+          <section key={section.id} className={`exam-section cat-${section.tone}`}>
             <h2>
               {section.id}. {section.title}{" "}
               <small>

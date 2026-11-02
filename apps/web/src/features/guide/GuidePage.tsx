@@ -173,7 +173,7 @@ const TUTORIALS: ReadonlyArray<{ title: string; jp: string; steps: readonly stri
     jp: "設定",
     steps: [
       "En Ajustes → Respaldo puedes descargar todo tu progreso; restaurar combina, nunca borra.",
-      "En Ajustes → Apariencia eliges entre cinco paletas y el modo claro u oscuro.",
+      "En Ajustes → Apariencia eliges entre ocho paletas y el modo claro u oscuro.",
     ],
   },
 ];

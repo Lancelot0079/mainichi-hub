@@ -1,6 +1,7 @@
 import {
   addDays,
   blockMinutes,
+  KIND_BLOCK,
   kindInfo,
   LEVEL_LABEL,
   LISTENING_CATALOG,
@@ -135,7 +136,7 @@ function Session({ item }: { item: ListeningItem | undefined }) {
   }
 
   return (
-    <div className="panel stack session-panel">
+    <div className={`panel stack session-panel cat-${KIND_BLOCK[item.kind]}`}>
       <div className="row between">
         <div>
           <span className="tag">
@@ -212,7 +213,7 @@ function Session({ item }: { item: ListeningItem | undefined }) {
 function LibraryItem({ item, onPractice }: { item: ListeningItem; onPractice: () => void }) {
   const info = kindInfo(item.kind);
   return (
-    <article className="panel resource">
+    <article className={`panel resource cat-${KIND_BLOCK[item.kind]}`}>
       <div className="row between">
         <Jp className="glyph">{info.jp}</Jp>
         <span className="tag">
@@ -315,7 +316,7 @@ function Catalog({ added }: { added: Set<string> }) {
       </div>
       <div className="grid g2 mt">
         {visible.map((c) => (
-          <article key={c.id} className="panel resource">
+          <article key={c.id} className={`panel resource cat-${KIND_BLOCK[c.kind]}`}>
             <div className="row between">
               <Jp className="glyph">{kindInfo(c.kind).jp}</Jp>
               <span className="tag">

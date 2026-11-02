@@ -27,6 +27,10 @@ const TEXT_PAIRS: ReadonlyArray<[keyof Tokens, keyof Tokens]> = [
   ["shu", "surface"],
   ["ok", "surface"],
   ["warn", "surface"],
+  ["srs", "surface"],
+  ["les", "surface"],
+  ["out", "surface"],
+  ["lis", "surface"],
 ];
 
 describe("palettes", () => {
@@ -42,6 +46,20 @@ describe("palettes", () => {
       });
     }
   }
+
+  it("keeps category colors visible on the page background", () => {
+    for (const palette of PALETTES) {
+      for (const mode of ["light", "dark"] as const) {
+        const tokens = palette[mode];
+        for (const key of ["srs", "les", "out", "lis"] as const) {
+          expect(
+            contrast(tokens[key], tokens.paper),
+            `${palette.id} ${mode} ${key}`,
+          ).toBeGreaterThan(3);
+        }
+      }
+    }
+  });
 
   it("defines every token in both modes", () => {
     for (const palette of PALETTES) {

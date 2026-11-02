@@ -21,7 +21,7 @@ conflict-free multi-device sync and no servers to run.
   that log time and turn what you hear into flashcards.
 - **MEXT-style exams**: an original 48-question practice set that mirrors the official Japanese
   test (sections, weights, 100 minutes), per-level results, and tracking of official papers.
-- **Built-in guide** with a live setup checklist, plus five color palettes in light and dark.
+- **Built-in guide** with a live setup checklist, plus eight color palettes in light and dark, each with four category colors.
 - **Automatic sync** every hour through GitHub Actions, with no server to maintain.
 - **Push alerts**: a plan each morning and, only if you have not studied, a reminder each evening.
 - **Works offline** as an installable PWA, and syncs between devices without losing edits.

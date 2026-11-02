@@ -7,6 +7,8 @@ import type { ExamAttempt, ExamQuestion, ExamSection, JlptLevel } from "./schema
  */
 export interface SectionInfo {
   id: ExamSection;
+  /** Color family borrowed from the routine palette. */
+  tone: "srs" | "les" | "out" | "lis";
   title: string;
   jp: string;
   instruction: string;
@@ -17,6 +19,7 @@ export interface SectionInfo {
 export const MEXT_SECTIONS: readonly SectionInfo[] = [
   {
     id: "I",
+    tone: "srs",
     title: "Completar la oración",
     jp: "空欄補充",
     instruction: "＿＿に入る一番適当なものをA〜Dの中から一つ選びなさい。",
@@ -25,6 +28,7 @@ export const MEXT_SECTIONS: readonly SectionInfo[] = [
   },
   {
     id: "II",
+    tone: "les",
     title: "Significado más cercano",
     jp: "言い換え",
     instruction: "［　］の部分と一番関係があるものをA〜Dの中から一つ選びなさい。",
@@ -33,6 +37,7 @@ export const MEXT_SECTIONS: readonly SectionInfo[] = [
   },
   {
     id: "III",
+    tone: "out",
     title: "El mismo kanji",
     jp: "漢字",
     instruction: "［　］のひらがなと同じ漢字で書くものをA〜Dの中から一つ選びなさい。",
@@ -41,6 +46,7 @@ export const MEXT_SECTIONS: readonly SectionInfo[] = [
   },
   {
     id: "IV",
+    tone: "lis",
     title: "Comprensión de lectura",
     jp: "読解",
     instruction: "次の文章を読んで、あとの問いに答えなさい。",

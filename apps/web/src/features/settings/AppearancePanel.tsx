@@ -26,6 +26,12 @@ function Preview({ tokens, label }: { tokens: Tokens; label: string }) {
           <i />
         </span>
       </div>
+      <div className="preview-cats">
+        <i style={{ background: tokens.srs }} />
+        <i style={{ background: tokens.les }} />
+        <i style={{ background: tokens.out }} />
+        <i style={{ background: tokens.lis }} />
+      </div>
     </div>
   );
 }

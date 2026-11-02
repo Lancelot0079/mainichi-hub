@@ -311,3 +311,59 @@ label.opt input {
   height: 100%;
   background: var(--shu);
 }
+
+/* Category colors: one per part of the routine, shared by every page */
+.cat-srs {
+  --cat: var(--c-srs);
+}
+.cat-les {
+  --cat: var(--c-les);
+}
+.cat-out {
+  --cat: var(--c-out);
+}
+.cat-lis {
+  --cat: var(--c-lis);
+}
+.block,
+.resource,
+.session-panel {
+  border-top: 3px solid var(--cat, var(--rule));
+}
+.block .kanji,
+.resource .glyph,
+.plan-item .glyph {
+  color: var(--cat, var(--ai));
+}
+.plan-item {
+  border-left: 3px solid var(--cat, var(--rule));
+}
+.hbar[class*="cat-"] .track i {
+  background: var(--cat);
+}
+.exam-section h2::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 8px;
+  border-radius: 3px;
+  background: var(--cat, var(--ai));
+}
+.exam-section .instruction {
+  border-left: 3px solid var(--cat, var(--rule));
+  padding-left: 10px;
+}
+.legend .swatch {
+  background: var(--cat);
+  border-color: transparent;
+}
+.preview-cats {
+  display: flex;
+  gap: 4px;
+}
+.preview-cats i {
+  flex: 1;
+  height: 6px;
+  border-radius: 99px;
+}

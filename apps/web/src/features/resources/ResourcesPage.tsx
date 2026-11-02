@@ -131,7 +131,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
   }
 
   return (
-    <article className="panel resource">
+    <article className={`panel resource cat-${resource.block}`}>
       <div className="row between">
         <Jp className="glyph">{resource.jp}</Jp>
         <span className={`tag ${tagClass}`}>{tagText}</span>

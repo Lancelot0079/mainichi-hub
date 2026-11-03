@@ -25,23 +25,35 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      # Until the data token is configured, runs succeed without doing anything, so a fresh
-      # fork or setup does not fail every hour.
-      CONFIGURED: ${{ secrets.DATA_REPO_TOKEN != '' }}
     steps:
-      - if: env.CONFIGURED != 'true'
-        run: echo "::notice::Falta el secreto DATA_REPO_TOKEN; ver docs/setup.md"
-      - if: env.CONFIGURED == 'true'
+      # Until the data token is configured, runs succeed without doing anything, so a fresh
+      # fork or setup does not fail every hour. Checked in a step because an empty secret and a
+      # missing one look the same there, and the log says which secrets arrived.
+      - id: config
+        run: |
+          for name in DATA_REPO DATA_REPO_TOKEN WANIKANI_TOKEN NTFY_TOPIC; do
+            if [ -n "${!name}" ]; then echo "$name: set"; else echo "$name: empty"; fi
+          done
+          if [ -n "$DATA_REPO_TOKEN" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Falta el secreto DATA_REPO_TOKEN; ver docs/setup.md"
+          fi
+        env:
+          DATA_REPO: ${{ secrets.DATA_REPO }}
+          DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+          WANIKANI_TOKEN: ${{ secrets.WANIKANI_TOKEN }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+      - if: steps.config.outputs.ready == 'true'
         uses: actions/checkout@v7
-      - if: env.CONFIGURED == 'true'
+      - if: steps.config.outputs.ready == 'true'
         uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
-      - if: env.CONFIGURED == 'true'
+      - if: steps.config.outputs.ready == 'true'
         run: npm ci --omit=dev --ignore-scripts
-      - if: env.CONFIGURED == 'true'
+      - if: steps.config.outputs.ready == 'true'
         run: npm run sync -- --slot="$SLOT"
         env:
           SLOT: ${{ inputs.slot || 'auto' }}

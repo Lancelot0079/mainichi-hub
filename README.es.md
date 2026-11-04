@@ -24,7 +24,7 @@ sincronización entre dispositivos sin conflictos y ningún servidor que mantene
   que registran tu tiempo y convierten lo que oyes en tarjetas.
 - **Exámenes estilo MEXT**: 48 preguntas originales con el formato oficial (secciones, puntajes y
   100 minutos), resultados por nivel y registro de exámenes oficiales.
-- **Guía integrada** con lista de configuración en vivo, y ocho paletas en modo claro y oscuro, cada una con cuatro colores por categoría.
+- **Guía integrada** con lista de configuración en vivo, y nueve paletas en modo claro y oscuro, cada una con cuatro colores por categoría.
 - **Sincronización automática** cada hora con GitHub Actions, sin servidor.
 - **Alertas push**: un plan cada mañana y, solo si no has estudiado, un recordatorio cada noche.
 - **Funciona sin conexión** como PWA instalable, y sincroniza entre dispositivos sin perder cambios.

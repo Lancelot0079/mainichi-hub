@@ -47,7 +47,6 @@
   .btn:active:not(:disabled) {
     transform: scale(0.97);
   }
-  .plan-item,
   .resource,
   .palette,
   .tutorial {
@@ -56,13 +55,13 @@
       box-shadow 180ms,
       border-color 180ms;
   }
-  .plan-item:hover,
   .resource:hover,
   .palette:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px -14px color-mix(in srgb, var(--ink) 55%, transparent);
   }
-  nav.tabs a,
+  .station,
+  .station .mark,
   .opt,
   .seg button,
   .filters button {

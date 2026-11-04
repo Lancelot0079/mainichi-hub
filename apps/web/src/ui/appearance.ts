@@ -10,7 +10,7 @@ export interface Appearance {
 
 /** A per-device preference, so it lives in local storage rather than in synced state. */
 const STORAGE_KEY = "mainichi-hub-appearance";
-const DEFAULT: Appearance = { palette: "ai", mode: "auto" };
+const DEFAULT: Appearance = { palette: "washi", mode: "auto" };
 const darkQuery = matchMedia("(prefers-color-scheme: dark)");
 const listeners = new Set<() => void>();
 

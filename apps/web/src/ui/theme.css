@@ -1,20 +1,20 @@
 :root {
-  /* Cuaderno de práctica: papel de genkō yōshi, tinta índigo, sello bermellón para cada día cumplido */
-  --paper: #f1f2ee;
-  --surface: #ffffff;
-  --ink: #1c2333;
-  --muted: #5b6273;
-  --rule: #d7dad1;
-  --ai: #2e4a7d;
+  /* Washi: papel de manuscrito, tinta sumi, sello bermellón y una línea de tren por parte de la rutina */
+  --paper: #f6f1e6;
+  --surface: #fffdf8;
+  --ink: #1f1b16;
+  --muted: #5e5446;
+  --rule: #d9cbb0;
+  --ai: #274a7d;
   --on-ai: #ffffff;
-  --shu: #c2412f;
+  --shu: #b7372a;
   --on-shu: #ffffff;
-  --ok: #2d7a57;
-  --warn: #8f5a0e;
-  --c-srs: #158353;
-  --c-les: #1577c8;
-  --c-out: #ac5d13;
-  --c-lis: #c63895;
+  --ok: #3f6b2b;
+  --warn: #8a5310;
+  --c-srs: #274a7d;
+  --c-les: #4a7232;
+  --c-out: #66457a;
+  --c-lis: #a24f17;
   --font-display: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
   --font-body: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
   color-scheme: light;
@@ -22,41 +22,41 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #12161f;
-    --surface: #1a202b;
-    --ink: #e7e5de;
-    --muted: #a2a8b4;
-    --rule: #2a3243;
-    --ai: #93aee0;
-    --on-ai: #12161f;
-    --shu: #e46650;
-    --on-shu: #12161f;
-    --ok: #5dba8d;
-    --warn: #e0a24a;
-    --c-srs: #05ab86;
-    --c-les: #528dff;
-    --c-out: #d27908;
-    --c-lis: #e253ae;
+    --paper: #17150f;
+    --surface: #211e17;
+    --ink: #ece5d6;
+    --muted: #a99f8d;
+    --rule: #3a342a;
+    --ai: #93b3e6;
+    --on-ai: #17150f;
+    --shu: #e8705a;
+    --on-shu: #17150f;
+    --ok: #86c46f;
+    --warn: #e3a64e;
+    --c-srs: #93b3e6;
+    --c-les: #8cc46b;
+    --c-out: #c7a0dc;
+    --c-lis: #eb9a5a;
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --paper: #12161f;
-  --surface: #1a202b;
-  --ink: #e7e5de;
-  --muted: #a2a8b4;
-  --rule: #2a3243;
-  --ai: #93aee0;
-  --on-ai: #12161f;
-  --shu: #e46650;
-  --on-shu: #12161f;
-  --ok: #5dba8d;
-  --warn: #e0a24a;
-  --c-srs: #05ab86;
-  --c-les: #528dff;
-  --c-out: #d27908;
-  --c-lis: #e253ae;
+  --paper: #17150f;
+  --surface: #211e17;
+  --ink: #ece5d6;
+  --muted: #a99f8d;
+  --rule: #3a342a;
+  --ai: #93b3e6;
+  --on-ai: #17150f;
+  --shu: #e8705a;
+  --on-shu: #17150f;
+  --ok: #86c46f;
+  --warn: #e3a64e;
+  --c-srs: #93b3e6;
+  --c-les: #8cc46b;
+  --c-out: #c7a0dc;
+  --c-lis: #eb9a5a;
   color-scheme: dark;
 }
 

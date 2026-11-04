@@ -114,7 +114,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
     title: "Ajustes",
     points: [
       "Conecta tu repositorio privado para sincronizar el celular y el computador.",
-      "Elige entre ocho paletas y el modo claro u oscuro, agrega tus fechas y descarga respaldos.",
+      "Elige entre nueve paletas y el modo claro u oscuro, agrega tus fechas y descarga respaldos.",
       "Aquí está el botón para volver a ver este recorrido.",
     ],
     tip: "En la Guía (案内, arriba a la derecha) verás qué te falta configurar y un tutorial de cada herramienta.",

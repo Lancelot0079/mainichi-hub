@@ -57,32 +57,6 @@ u {
   text-decoration-color: var(--shu);
 }
 
-/* Navigation on small screens: every section visible at once */
-@media (max-width: 640px) {
-  nav.tabs {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 4px;
-    border-bottom: 0;
-  }
-  nav.tabs a {
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    background: var(--surface);
-    text-align: center;
-    padding: 6px 4px;
-    font-size: 13px;
-  }
-  nav.tabs a .jp {
-    display: block;
-    margin: 0;
-  }
-  nav.tabs a[aria-current="page"] {
-    border-color: var(--shu);
-    box-shadow: inset 0 -3px 0 var(--shu);
-  }
-}
-
 /* Listening */
 .method {
   margin: 0;
@@ -325,18 +299,12 @@ label.opt input {
 .cat-lis {
   --cat: var(--c-lis);
 }
-.block,
 .resource,
 .session-panel {
   border-top: 3px solid var(--cat, var(--rule));
 }
-.block .kanji,
-.resource .glyph,
-.plan-item .glyph {
+.resource .glyph {
   color: var(--cat, var(--ai));
-}
-.plan-item {
-  border-left: 3px solid var(--cat, var(--rule));
 }
 .hbar[class*="cat-"] .track i {
   background: var(--cat);
@@ -668,9 +636,9 @@ label.opt input {
   border-radius: 4px;
   background: var(--shu);
 }
-nav.tabs.touring a[aria-current="page"] {
-  background: color-mix(in srgb, var(--shu) 12%, transparent);
-  border-radius: 8px 8px 0 0;
+nav.rail.touring .station[aria-current="page"] {
+  background: color-mix(in srgb, var(--line) 14%, transparent);
+  border-radius: 10px;
 }
 @media (max-width: 600px) {
   .tour {

@@ -58,6 +58,12 @@ function setupChecks({ state, snapshot }: Hub): Check[] {
       href: "#recursos",
     },
     {
+      label: "Primera lección",
+      done: Object.keys(state.progress.lessons).length > 0,
+      how: "Abre Lecciones y empieza por «Los cuatro sistemas de escritura».",
+      href: "#lecciones",
+    },
+    {
       label: "Biblioteca de escucha",
       done: state.listening.some((i) => !i.deletedAt),
       how: "Agrega al menos un podcast o anime de los recomendados.",
@@ -82,6 +88,29 @@ const TUTORIALS: ReadonlyArray<{ title: string; jp: string; steps: readonly stri
       "En cada bloque, pulsa Empezar para usar el cronómetro, o Marcar hecho si lo hiciste fuera.",
       "Desmarcar deshace el bloque si te equivocaste.",
       "El sello 済 se llena cuando completas los cuatro bloques.",
+    ],
+  },
+  {
+    title: "Lecciones desde cero",
+    jp: "課",
+    steps: [
+      "Abre Lecciones: el curso va de la escritura al hiragana, el katakana, los saludos, los números y las primeras oraciones.",
+      "Entra a una lección y lee la explicación; con 🔊 la escuchas si tu dispositivo tiene voz japonesa.",
+      "Pulsa «Empezar los ejercicios». Al principio reconoces, luego eliges, después escribes y al final dibujas de memoria.",
+      "Lo que fallas vuelve al final de la sesión, y la próxima vez la lección insiste en eso.",
+      "Con 80 % a la primera la lección queda completada; desde ahí sus elementos entran al «Repaso mixto» cuando toca.",
+      "Al terminar puedes pasar tus errores a tarjetas, y el tiempo se suma al bloque Lección del día.",
+    ],
+  },
+  {
+    title: "Dibujar kana de memoria",
+    jp: "書",
+    steps: [
+      "En Lecciones, pulsa «Dibujar» y elige hiragana o katakana y qué filas.",
+      "Verás una lectura en rōmaji: dibuja el kana con el ratón, un lápiz o el dedo.",
+      "Pulsa Comprobar: el sistema compara tu dibujo con todos los kana básicos y te dice cuánto se parece al correcto y a cuáles más se parece.",
+      "Pasa si tu dibujo se parece más al kana correcto que a cualquier otro. Reconoce la forma, no el orden de los trazos.",
+      "Los kana que te cuestan aparecen más seguido; los de las lecciones avanzadas también se piden dibujados.",
     ],
   },
   {

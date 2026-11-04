@@ -16,6 +16,10 @@ conflict-free multi-device sync and no servers to run.
 - **Daily dashboard** that merges what is due across WaniKani, Anki, kana and flashcards.
 - **Resource hub** with every platform in one place: direct links, one-click time logging and
   progress tracking.
+- **Lessons from zero**: 27 interactive lessons (writing systems, kana, greetings, numbers, time,
+  dates and first sentences) that adapt to what you already know, plus a mixed review.
+- **Handwriting challenge**: draw a kana from memory and an in-browser shape matcher tells you how
+  close it is to the right one, with no server or trained model.
 - **Practice tools**: kana trainer, spaced-repetition cards, a sentence diary, and routine timers.
 - **Listening library**: podcasts, anime, songs, films and news with guided four-step sessions
   that log time and turn what you hear into flashcards.
@@ -56,12 +60,12 @@ flowchart LR
   Job --> Ntfy
 ```
 
-| Package                 | Responsibility                                                   |
-| ----------------------- | ---------------------------------------------------------------- |
-| `packages/core`         | Pure domain: SRS, streaks, merge, schemas, daily plan and alerts |
-| `packages/integrations` | Adapters: GitHub storage, WaniKani, AnkiConnect, ntfy            |
-| `apps/web`              | React PWA, organized by feature                                  |
-| `apps/sync`             | Scheduled job: refreshes data and sends alerts                   |
+| Package                 | Responsibility                                                                         |
+| ----------------------- | -------------------------------------------------------------------------------------- |
+| `packages/core`         | Pure domain: SRS, lessons, handwriting matching, merge, schemas, daily plan and alerts |
+| `packages/integrations` | Adapters: GitHub storage, WaniKani, AnkiConnect, ntfy                                  |
+| `apps/web`              | React PWA, organized by feature                                                        |
+| `apps/sync`             | Scheduled job: refreshes data and sends alerts                                         |
 
 ### Engineering decisions
 

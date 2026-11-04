@@ -428,9 +428,9 @@ describe("importState", () => {
 describe("dailyPlan", () => {
   it("includes connected services only when they have data", () => {
     const ids = dailyPlan(emptyState(), emptySnapshot(), today).items.map((i) => i.id);
-    expect(ids).toEqual(["kana", "cards", "diary"]);
+    expect(ids).toEqual(["kana", "lessons", "cards", "diary"]);
     const all = dailyPlan(demoState(today), demoSnapshot(today), today).items.map((i) => i.id);
-    expect(all).toEqual(["wanikani", "anki", "kana", "cards", "diary"]);
+    expect(all).toEqual(["wanikani", "anki", "kana", "lessons", "cards", "diary"]);
   });
 
   it("treats WaniKani activity as studying and extends the streak", () => {

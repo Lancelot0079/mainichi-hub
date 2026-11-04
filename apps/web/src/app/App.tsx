@@ -9,6 +9,12 @@ const page = (load: () => Promise<{ default: ComponentType }>) => lazy(load);
 const ROUTES = [
   { id: "hoy", jp: "今日", label: "Hoy", Page: TodayPage },
   {
+    id: "lecciones",
+    jp: "課",
+    label: "Lecciones",
+    Page: page(() => import("../features/lessons/LessonsPage")),
+  },
+  {
     id: "recursos",
     jp: "資料",
     label: "Recursos",

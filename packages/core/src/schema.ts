@@ -46,6 +46,16 @@ const kanaRecordSchema = z.object({
 });
 export type KanaRecord = z.infer<typeof kanaRecordSchema>;
 
+const lessonRecordSchema = z.object({
+  runs: z.number().int().nonnegative().default(0),
+  /** Percentage right on first try, best and latest session. */
+  best: z.number().min(0).max(100).default(0),
+  last: z.number().min(0).max(100).default(0),
+  completedAt: z.string().optional(),
+  updatedAt: z.string().default(""),
+});
+export type LessonRecord = z.infer<typeof lessonRecordSchema>;
+
 const progressSchema = z.object({
   log: z.record(z.string(), dayLogSchema).default({}),
   kana: z
@@ -59,6 +69,9 @@ const progressSchema = z.object({
     .default(() => ({ h: 1, k: 1 })),
   weekly: z.record(z.string(), z.record(z.string(), z.boolean())).default({}),
   script: z.enum(["h", "k"]).default("h"),
+  lessons: z.record(z.string(), lessonRecordSchema).default({}),
+  /** Leitner records of lesson items and drawn kana, keyed as in lesson-session.ts. */
+  items: z.record(z.string(), kanaRecordSchema).default({}),
 });
 
 export const cardSchema = z.object({

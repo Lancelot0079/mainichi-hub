@@ -5,6 +5,7 @@ import {
   KANA,
   nextUnlock,
   rateCard,
+  recordLessonRun,
   type BlockId,
   type Card,
   type CardRating,
@@ -281,5 +282,32 @@ export function setMilestones(milestones: Milestone[]) {
   update((s) => {
     s.settings.milestones = milestones;
     s.settings.updatedAt = now();
+  });
+}
+
+/** Grades one lesson item or drawn kana; it counts as a review for the day's activity. */
+export function gradeLessonItem(key: string, correct: boolean) {
+  update((s) => {
+    const today = getHub().today;
+    s.progress.items[key] = gradeKana(s.progress.items[key], correct, today);
+    dayLog(s, today).reviews += 1;
+  });
+}
+
+/** Marks a lesson as started, so its items join the mixed review even if it is left halfway. */
+export function startLesson(id: string) {
+  update((s) => {
+    s.progress.lessons[id] ??= { runs: 0, best: 0, last: 0, updatedAt: now() };
+  });
+}
+
+/** Records a finished session and adds its time to the lesson block. */
+export function finishLesson(id: string | null, score: number, minutes: number) {
+  update((s) => {
+    if (id) s.progress.lessons[id] = recordLessonRun(s.progress.lessons[id], score, now());
+    if (minutes <= 0) return;
+    const entry = blockLog(dayLog(s, getHub().today), "les");
+    entry.minutes += minutes;
+    entry.updatedAt = now();
   });
 }

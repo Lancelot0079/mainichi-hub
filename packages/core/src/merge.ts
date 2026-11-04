@@ -6,6 +6,7 @@ import type {
   ExamAttempt,
   HubState,
   KanaRecord,
+  LessonRecord,
   ListeningItem,
   ResourceSession,
   ResourceTrack,
@@ -92,6 +93,19 @@ function pickKana(a: KanaRecord, b: KanaRecord): KanaRecord {
   return a.due >= b.due ? a : b;
 }
 
+/** Runs and the best score only grow; a lesson stays completed from the first time it was. */
+function mergeLesson(a: LessonRecord, b: LessonRecord): LessonRecord {
+  const latest = newer(a, b);
+  const completed = [a.completedAt, b.completedAt].filter((x): x is string => !!x).sort()[0];
+  return {
+    runs: Math.max(a.runs, b.runs),
+    best: Math.max(a.best, b.best),
+    last: latest.last,
+    ...(completed ? { completedAt: completed } : {}),
+    updatedAt: latest.updatedAt,
+  };
+}
+
 export function mergeStates(a: HubState, b: HubState): HubState {
   const [older, latest] = b.updatedAt > a.updatedAt ? [a, b] : [b, a];
   const weekly = { ...older.progress.weekly };
@@ -113,6 +127,8 @@ export function mergeStates(a: HubState, b: HubState): HubState {
       },
       weekly,
       script: latest.progress.script,
+      lessons: mergeRecord(a.progress.lessons, b.progress.lessons, mergeLesson),
+      items: mergeRecord(a.progress.items, b.progress.items, pickKana),
     },
     cards: mergeById<Card>(a.cards, b.cards, pickVersion),
     diary: mergeById<DiaryEntry>(a.diary, b.diary, pickVersion),

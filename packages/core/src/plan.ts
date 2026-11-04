@@ -1,6 +1,7 @@
 import { blockDone, BLOCKS, currentStreak, dayActive, type Block } from "./activity";
 import { addDays, daysBetween } from "./dates";
 import type { AlertSlot, BlockId, HubState, Milestone, Snapshot } from "./schema";
+import { dueLessonItems, nextLesson } from "./lesson-session";
 import { cardsDue, kanaDue } from "./srs";
 
 export interface PlanItem {
@@ -78,6 +79,26 @@ export function dailyPlan(state: HubState, snapshot: Snapshot, today: string): D
     detail: kana ? "Unos 3 minutos" : "Nada pendiente; puedes hacer práctica libre",
     count: kana,
     href: "#kana",
+    external: false,
+  });
+  const lessonReviews = dueLessonItems(state, today).length;
+  const lesson = nextLesson(state);
+  items.push({
+    id: "lessons",
+    block: "les",
+    jp: "課",
+    title: lessonReviews
+      ? `${lessonReviews} repasos de lecciones`
+      : lesson
+        ? `Lección: ${lesson.title}`
+        : "Curso desde cero completado",
+    detail: lessonReviews
+      ? "Repaso mixto de lo que ya viste"
+      : lesson
+        ? lesson.summary
+        : "Sigue con los retos de escritura",
+    count: lessonReviews || (lesson ? 1 : 0),
+    href: "#lecciones",
     external: false,
   });
   const cards = cardsDue(state.cards, today).length;

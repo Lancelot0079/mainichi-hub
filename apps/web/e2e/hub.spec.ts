@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test";
 
 const ROUTES = [
   "hoy",
+  "lecciones",
   "recursos",
   "escucha",
   "kana",
@@ -204,6 +205,72 @@ test("the chosen palette persists and stays accessible", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   const results = await new AxeBuilder({ page }).withRules(["color-contrast"]).analyze();
   expect(results.violations).toEqual([]);
+});
+
+test("a lesson teaches first, then adapts its exercises and records the result", async ({
+  page,
+}) => {
+  await page.goto("/#lecciones");
+  await expect(page.getByText("0 de 27 completadas")).toBeVisible();
+  await page.getByRole("button", { name: /Vocales y fila K/ }).click();
+  await expect(page.getByRole("heading", { name: "Las cinco vocales" })).toBeVisible();
+  await page.getByRole("button", { name: "Empezar los ejercicios" }).click();
+  await expect(page.getByText("Une cada palabra con su significado")).toBeVisible();
+  // Leaving halfway keeps the lesson as started.
+  await page.getByRole("button", { name: "Salir" }).click();
+  await expect(page.getByRole("button", { name: /Vocales y fila K.*En curso/ })).toBeVisible();
+});
+
+test("an order exercise builds a sentence from tiles", async ({ page }) => {
+  await page.goto("/#lecciones");
+  await page.getByRole("button", { name: /Tu presentación/ }).click();
+  await page.getByLabel("Tu nombre como suena (rōmaji)").fill("kamira");
+  await expect(page.getByText("わたしは カミラ です。")).toBeVisible();
+  await page.getByRole("button", { name: "Empezar los ejercicios" }).click();
+  // Answer whatever comes until an ordering exercise shows up.
+  for (let i = 0; i < 20; i++) {
+    if (await page.getByText(/^Ordena:/).isVisible()) break;
+    const match = page.locator(".match");
+    if (await match.isVisible()) {
+      // Pair each word by trying meanings until it locks in.
+      const words = match.locator(".stack").first().getByRole("button");
+      const meanings = match.locator(".stack").last().getByRole("button");
+      for (let w = 0; w < (await words.count()); w++) {
+        for (let m = 0; m < (await meanings.count()) && !(await words.nth(w).isDisabled()); m++) {
+          await words.nth(w).click();
+          if (!(await meanings.nth(m).isDisabled())) await meanings.nth(m).click();
+        }
+      }
+      await page.getByRole("button", { name: /Continuar|Ver resultado/ }).click();
+      continue;
+    }
+    const option = page.locator(".ex-options .opt").first();
+    if (await option.isVisible()) await option.click();
+    else await page.getByRole("button", { name: "No lo sé" }).click();
+    await page.getByRole("button", { name: /Continuar|Ver resultado/ }).click();
+  }
+  const available = page.getByLabel("Palabras disponibles").getByRole("button");
+  while ((await available.count()) > 0) await available.first().click();
+  await page.getByRole("button", { name: "Comprobar" }).click();
+  await expect(page.getByText(/¡Correcto!|No exactamente\./)).toBeVisible();
+});
+
+test("a drawn kana is recognized and compared with the closest ones", async ({ page }) => {
+  await page.goto("/#lecciones");
+  await page.getByRole("button", { name: "Dibujar" }).click();
+  await page.getByRole("button", { name: "Empezar (10 kana)" }).click();
+  const canvas = page.locator(".draw-canvas");
+  const box = (await canvas.boundingBox())!;
+  const at = (x: number, y: number) => [box.x + x * box.width, box.y + y * box.height] as const;
+  await page.mouse.move(...at(0.68, 0.12));
+  await page.mouse.down();
+  await page.mouse.move(...at(0.3, 0.5), { steps: 8 });
+  await page.mouse.move(...at(0.68, 0.88), { steps: 8 });
+  await page.mouse.up();
+  await expect(page.getByText("1 trazo")).toBeVisible();
+  await page.getByRole("button", { name: "Comprobar" }).click();
+  await expect(page.getByText(/Se parece en un \d+ % a/)).toBeVisible();
+  await expect(page.getByRole("button", { name: /Continuar|Ver resultado/ })).toBeVisible();
 });
 
 test("the guide lists what is still missing", async ({ page }) => {

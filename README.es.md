@@ -14,6 +14,10 @@ sincronización entre dispositivos sin conflictos y ningún servidor que mantene
 - **Panel diario** que une lo pendiente en WaniKani, Anki, kana y tarjetas.
 - **Hub de recursos** con cada plataforma en un lugar: enlaces directos, registro de tiempo con un
   clic y seguimiento de avance.
+- **Lecciones desde cero**: 27 lecciones interactivas (escritura, kana, saludos, números, hora,
+  fechas y primeras oraciones) que se adaptan a lo que ya sabes, con repaso mixto.
+- **Reto de escritura**: dibujas un kana de memoria y el sistema reconoce la forma y te dice cuánto
+  se parece al correcto, sin servidores ni modelos externos.
 - **Herramientas de práctica**: entrenador de kana, tarjetas con repetición espaciada, diario de
   oraciones y temporizadores de rutina.
 - **Biblioteca de escucha**: podcasts, anime, canciones, películas y noticias con sesiones guiadas

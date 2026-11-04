@@ -17,8 +17,10 @@ const ROUTES = [
 
 let cspViolations: string[] = [];
 
-test.beforeEach(({ page }) => {
+test.beforeEach(async ({ page }) => {
   cspViolations = [];
+  // The welcome tour has its own tests; elsewhere it would cover the page.
+  await page.addInitScript(() => localStorage.setItem("mainichi-hub-tour", "seen"));
   page.on("pageerror", (error) => {
     throw error;
   });

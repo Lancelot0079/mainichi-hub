@@ -7,6 +7,7 @@ import { connect, disconnect, loadConnection, syncRequested } from "../../state/
 import { copyText, downloadText } from "../../ui/clipboard";
 import { relativeTime } from "../../ui/primitives";
 import { toast } from "../../ui/toast";
+import { openTour } from "../tour/tour-state";
 import { AppearancePanel } from "./AppearancePanel";
 
 function Connection() {
@@ -243,6 +244,15 @@ export default function SettingsPage() {
       <Milestones />
       <h2>Respaldo</h2>
       <Backup />
+      <h2>Recorrido de bienvenida</h2>
+      <div className="panel row between">
+        <p className="hint">
+          Un repaso guiado de cada sección de la página, como el del primer día.
+        </p>
+        <button type="button" className="btn ghost" onClick={openTour}>
+          Ver el recorrido de nuevo
+        </button>
+      </div>
     </>
   );
 }

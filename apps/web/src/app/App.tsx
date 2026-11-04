@@ -3,6 +3,8 @@ import { useHub, type SyncStatus } from "../state/store";
 import { Jp, relativeTime } from "../ui/primitives";
 import { Toaster } from "../ui/toast";
 import { TodayPage } from "../features/today/TodayPage";
+import { Tour } from "../features/tour/Tour";
+import { useTourOpen } from "../features/tour/tour-state";
 
 const page = (load: () => Promise<{ default: ComponentType }>) => lazy(load);
 
@@ -109,6 +111,7 @@ export function App() {
   const route = useRoute();
   const { status } = useHub();
   const { Page } = route;
+  const touring = useTourOpen();
 
   useEffect(() => {
     document.title = `${route.label} · Mainichi Hub`;
@@ -142,7 +145,7 @@ export function App() {
             <StatusPill status={status} />
           </div>
         </header>
-        <nav className="tabs" aria-label="Secciones">
+        <nav className={touring ? "tabs touring" : "tabs"} aria-label="Secciones">
           {ROUTES.filter((r) => !("hidden" in r)).map((r) => (
             <a key={r.id} href={`#${r.id}`} aria-current={r.id === route.id ? "page" : undefined}>
               <Jp className="jp">{r.jp}</Jp>
@@ -164,6 +167,7 @@ export function App() {
           </Suspense>
         </main>
       </div>
+      {touring && <Tour />}
       <Toaster />
     </>
   );

@@ -151,3 +151,12 @@
     transform: translateX(-2px);
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .tour[open] {
+    animation: rise 300ms var(--ease-out) both;
+  }
+  .tour-points {
+    animation: page-in 220ms var(--ease-out) both;
+  }
+}

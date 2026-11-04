@@ -607,3 +607,77 @@ label.opt input {
 .note-table.jp-cells td {
   font-size: 20px;
 }
+
+/* Welcome tour: a sheet low on the screen, so the section it describes stays visible above */
+.tour {
+  width: min(560px, calc(100vw - 32px));
+  max-height: 70vh;
+  margin: auto auto 24px;
+  padding: 20px;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 18px 50px rgb(0 0 0 / 22%);
+}
+.tour::backdrop {
+  background: color-mix(in srgb, var(--paper) 35%, transparent);
+}
+.tour-head {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.tour-head p {
+  margin: 0;
+}
+.tour-glyph {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 34px;
+  color: var(--shu);
+  min-width: 2.2em;
+  text-align: center;
+}
+.tour-title {
+  margin: 2px 0 0;
+  font-size: 20px;
+}
+.tour-points {
+  margin: 14px 0 10px;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+.tour-dots {
+  display: flex;
+  gap: 5px;
+  margin: 12px 0;
+}
+.tour-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--rule);
+}
+.tour-dots i.is-past {
+  background: color-mix(in srgb, var(--shu) 45%, var(--rule));
+}
+.tour-dots i.is-on {
+  width: 22px;
+  border-radius: 4px;
+  background: var(--shu);
+}
+nav.tabs.touring a[aria-current="page"] {
+  background: color-mix(in srgb, var(--shu) 12%, transparent);
+  border-radius: 8px 8px 0 0;
+}
+@media (max-width: 600px) {
+  .tour {
+    margin-bottom: 12px;
+    padding: 16px;
+  }
+  .tour-glyph {
+    font-size: 26px;
+  }
+}

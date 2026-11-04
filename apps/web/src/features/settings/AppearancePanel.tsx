@@ -8,31 +8,62 @@ const MODES: ReadonlyArray<[ThemeMode, string]> = [
   ["dark", "Oscuro"],
 ];
 
-/** A miniature of the dashboard painted with the palette's own tokens. */
+const LINES = ["--c-srs", "--c-les", "--c-out", "--c-lis"] as const;
+/** Squares filled on each stop of the miniature: one done, one under way, two to go. */
+const FILLED = [6, 3, 0, 0];
+
+/** A miniature of the Today screen (rail, station sign, route, departures) in the palette's tokens. */
 function Preview({ tokens, label }: { tokens: Tokens; label: string }) {
   return (
-    <div className="preview" style={cssVariables(tokens) as CSSProperties} aria-hidden="true">
-      <span className="preview-label">{label}</span>
-      <div className="preview-card">
-        <span className="preview-title" lang="ja">
+    <span className="preview" style={cssVariables(tokens) as CSSProperties} aria-hidden="true">
+      <span className="pv-rail">
+        <span className="pv-brand" lang="ja">
           毎日
         </span>
-        <span className="hanko sm">済</span>
-      </div>
-      <div className="preview-row">
-        <span className="preview-btn">Empezar</span>
-        <span className="preview-link">Abrir</span>
-        <span className="preview-bar">
-          <i />
+        <i className="pv-station is-on" />
+        {LINES.map((line) => (
+          <i
+            key={line}
+            className="pv-station"
+            style={{ "--line": `var(${line})` } as CSSProperties}
+          />
+        ))}
+      </span>
+      <span className="pv-main">
+        <span className="pv-sign">
+          <span className="pv-name" lang="ja">
+            今日
+          </span>
+          <i className="pv-band" />
         </span>
-      </div>
-      <div className="preview-cats">
-        <i style={{ background: tokens.srs }} />
-        <i style={{ background: tokens.les }} />
-        <i style={{ background: tokens.out }} />
-        <i style={{ background: tokens.lis }} />
-      </div>
-    </div>
+        <span className="pv-route">
+          {LINES.map((line, i) => (
+            <span
+              key={line}
+              className="pv-stop"
+              style={{ "--line": `var(${line})` } as CSSProperties}
+            >
+              {Array.from({ length: 6 }, (_, j) => (
+                <i key={j} className={j < (FILLED[i] ?? 0) ? "on" : undefined} />
+              ))}
+            </span>
+          ))}
+        </span>
+        <span className="pv-board">
+          {LINES.slice(0, 3).map((line) => (
+            <span
+              key={line}
+              className="pv-dep"
+              style={{ "--line": `var(${line})` } as CSSProperties}
+            >
+              <i />
+              <b />
+            </span>
+          ))}
+        </span>
+        <span className="pv-label">{label}</span>
+      </span>
+    </span>
   );
 }
 

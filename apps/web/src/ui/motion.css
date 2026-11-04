@@ -73,8 +73,7 @@
 
   /* Progress fills from the left the first time it appears */
   .bar > i,
-  .hbar .track i,
-  .preview-bar i {
+  .hbar .track i {
     animation: grow 700ms var(--ease-out) both;
     transform-origin: left center;
   }

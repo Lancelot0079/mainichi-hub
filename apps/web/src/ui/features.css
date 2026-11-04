@@ -222,8 +222,8 @@ label.opt input {
   color: inherit;
 }
 .palette.selected {
-  border-color: var(--ai);
-  box-shadow: 0 0 0 1px var(--ai);
+  border-color: var(--shu);
+  box-shadow: 0 0 0 2px var(--shu);
 }
 .previews {
   display: grid;
@@ -231,59 +231,122 @@ label.opt input {
   gap: 8px;
 }
 .preview {
-  display: grid;
-  gap: 6px;
-  padding: 8px;
-  border-radius: 8px;
-  background: var(--paper);
-  color: var(--ink);
-  border: 1px solid var(--rule);
-}
-.preview-label {
-  font-size: 11px;
-  color: var(--muted);
-}
-.preview-card {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 8px;
-  border-radius: 6px;
-  background: var(--surface);
-  border: 1px solid var(--rule);
+  min-height: 118px;
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  overflow: hidden;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--rule) 60%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--rule) 60%, transparent) 1px, transparent 1px);
+  background-size: 9px 9px;
+  color: var(--ink);
 }
-.preview-title {
+.pv-rail {
+  flex: none;
+  width: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 0;
+  background: var(--surface);
+  border-right: 1.5px solid var(--ink);
+}
+.pv-brand {
+  writing-mode: vertical-rl;
   font-family: var(--font-display);
   font-weight: 800;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--shu);
 }
-.preview-row {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  font-size: 11px;
+.pv-station {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--line, var(--shu));
+  background: var(--surface);
 }
-.preview-btn {
-  background: var(--ai);
-  color: var(--on-ai);
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-.preview-link {
-  color: var(--ai);
-  text-decoration: underline;
-}
-.preview-bar {
-  flex: 1;
-  height: 6px;
-  border-radius: 99px;
-  background: color-mix(in srgb, var(--rule) 70%, transparent);
-  overflow: hidden;
-}
-.preview-bar i {
-  display: block;
-  width: 60%;
-  height: 100%;
+.pv-station.is-on {
   background: var(--shu);
+  border-color: var(--shu);
+}
+.pv-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 6px;
+}
+.pv-sign {
+  display: grid;
+  background: var(--surface);
+  border: 1px solid var(--ink);
+  text-align: center;
+}
+.pv-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.3;
+  letter-spacing: 0.15em;
+}
+.pv-band {
+  height: 3px;
+  background: var(--shu);
+}
+.pv-route {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3px;
+}
+.pv-stop {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  padding: 3px;
+  border: 1px solid var(--ink);
+  border-top: 3px solid var(--line);
+  background: var(--surface);
+}
+.pv-stop i {
+  width: 4px;
+  height: 4px;
+  border: 1px solid var(--line);
+}
+.pv-stop i.on {
+  background: var(--line);
+}
+.pv-board {
+  display: grid;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface);
+  border: 1px solid var(--ink);
+}
+.pv-dep {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.pv-dep i {
+  width: 12px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--line);
+}
+.pv-dep b {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 35%, transparent);
+}
+.pv-label {
+  font-size: 11px;
+  color: var(--muted);
 }
 
 /* Category colors: one per part of the routine, shared by every page */
@@ -326,16 +389,6 @@ label.opt input {
   background: var(--cat);
   border-color: transparent;
 }
-.preview-cats {
-  display: flex;
-  gap: 4px;
-}
-.preview-cats i {
-  flex: 1;
-  height: 6px;
-  border-radius: 99px;
-}
-
 /* Lessons */
 .lesson-actions {
   display: grid;

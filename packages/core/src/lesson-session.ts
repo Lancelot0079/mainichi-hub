@@ -1,5 +1,21 @@
+import {
+  ADJECTIVE_FORMS,
+  ADJECTIVES,
+  adjectiveRule,
+  adjectiveSlips,
+  conjugate,
+  conjugateAdjective,
+  conjugationRule,
+  conjugationSlips,
+  GROUP_LABEL,
+  VERB_FORMS,
+  VERBS,
+  type AdjectiveForm,
+  type VerbForm,
+} from "./conjugation";
 import { STROKE_COUNTS } from "./handwriting";
 import type { Script } from "./kana";
+import { KANA_COURSE } from "./kana-course";
 import { LESSONS } from "./lesson-content";
 import type { Lesson, LessonItem, LessonQuestion } from "./lessons";
 import {
@@ -14,6 +30,7 @@ import {
   timeToKana,
   WEEKDAYS,
 } from "./numbers";
+import { COMMON_PARTICLES, PARTICLE_SENTENCES } from "./particles";
 import { kanaToRomaji } from "./romaji";
 import type { HubState, KanaRecord, LessonRecord } from "./schema";
 
@@ -68,6 +85,18 @@ export type Exercise =
       explanation: string;
     }
   | { kind: "draw"; key: string; char: string; romaji: string; script: Script; strokes?: number }
+  | {
+      /** A study card for a new item: nothing to answer, only to look, listen and say aloud. */
+      kind: "learn";
+      key: null;
+      jp: string;
+      reading: string;
+      romaji: string;
+      es: string;
+      glyph: boolean;
+      mnemonic?: string;
+      strokes?: number;
+    }
   | { kind: "match"; key: null; pairs: Array<{ jp: string; es: string }> };
 
 export type Random = () => number;
@@ -86,6 +115,11 @@ const DRAW_BOX = 3;
 export const LEARNED_BOX = 2;
 /** Score from which a lesson counts as completed. */
 export const PASS_PERCENT = 80;
+/** New items introduced per session in lessons that teach before testing. */
+export const NEW_PER_SESSION = 5;
+
+/** Both courses, so distractors and look-ups find every lesson. */
+const ALL_LESSONS: readonly Lesson[] = [...LESSONS, ...KANA_COURSE];
 
 export const itemKey = (lesson: Lesson, item: LessonItem) => `${lesson.id}:${item.jp}`;
 export const questionKey = (lesson: Lesson, index: number) => `${lesson.id}:q${index}`;
@@ -141,7 +175,7 @@ function choices(answer: string, pool: readonly string[], random: Random) {
 function neighbours(lesson: Lesson, item: LessonItem): LessonItem[] {
   const same = lesson.items.filter((i) => i !== item && !!i.glyph === !!item.glyph);
   if (same.length >= 3) return same;
-  const unit = LESSONS.filter((l) => l.unit === lesson.unit).flatMap((l) => l.items);
+  const unit = ALL_LESSONS.filter((l) => l.unit === lesson.unit).flatMap((l) => l.items);
   return [...same, ...unit.filter((i) => i !== item && !!i.glyph === !!item.glyph)];
 }
 
@@ -366,8 +400,13 @@ function slips(correct: string): string[] {
 function generated(lesson: Lesson, record: KanaRecord | undefined, random: Random): Exercise {
   const key = generatorKey(lesson);
   const typed = (record?.box ?? 0) >= LEARNED_BOX;
-  const build = (prompt: string, correct: string, accept: string[], wrong: string[]): Exercise => {
-    const explanation = `${prompt} = ${correct} (${kanaToRomaji(correct)})`;
+  const build = (
+    prompt: string,
+    correct: string,
+    accept: string[],
+    wrong: string[],
+    explanation = `${prompt} = ${correct} (${kanaToRomaji(correct)})`,
+  ): Exercise => {
     if (typed) {
       return {
         kind: "type",
@@ -468,6 +507,83 @@ function generated(lesson: Lesson, record: KanaRecord | undefined, random: Rando
         WEEKDAYS.map((w) => w.kana),
       );
     }
+    case "particles": {
+      const focus = lesson.focus ?? COMMON_PARTICLES;
+      const pool = PARTICLE_SENTENCES.filter((p) => focus.includes(p.particle));
+      const sentence = pool[int(random, 0, pool.length - 1)];
+      if (!sentence) throw new Error(`La lección ${lesson.id} no tiene oraciones`);
+      const blocked = new Set([sentence.particle, ...(sentence.alsoOk ?? [])]);
+      const wrong = [...new Set([...focus, ...COMMON_PARTICLES])].filter((p) => !blocked.has(p));
+      const full = `${sentence.before} ${sentence.particle} ${sentence.after}`;
+      return {
+        kind: "choice",
+        key,
+        prompt: `Completa: «${sentence.es}»`,
+        promptJa: false,
+        passage: `${sentence.before} ＿＿ ${sentence.after}`,
+        optionsJa: true,
+        ...choices(sentence.particle, wrong, random),
+        explanation: `${full} — ${sentence.why}`,
+        speak: full.replace(/\s/g, ""),
+      };
+    }
+    case "verbs": {
+      const forms = (lesson.focus ?? ["masu"]) as readonly VerbForm[];
+      const verb = VERBS[int(random, 0, VERBS.length - 1)];
+      const form = forms[int(random, 0, forms.length - 1)] ?? "masu";
+      if (!verb) throw new Error("No hay verbos");
+      const correct = conjugate(verb, form);
+      return build(
+        `${verb.dict} (${verb.es}) → ${VERB_FORMS[form]}`,
+        correct,
+        [correct],
+        conjugationSlips(verb, form),
+        conjugationRule(verb, form),
+      );
+    }
+    case "verb-groups": {
+      const verb = VERBS[int(random, 0, VERBS.length - 1)];
+      if (!verb) throw new Error("No hay verbos");
+      const labels = Object.values(GROUP_LABEL);
+      const masu = conjugate(verb, "masu");
+      const why =
+        verb.group === "irregular"
+          ? `${verb.dict} es uno de los dos irregulares, con ${verb.dict === "する" ? "くる" : "する"}.`
+          : verb.dict === "かえる" || verb.dict === "はいる"
+            ? `${verb.dict} parece del grupo 2, pero es una excepción del grupo 1: ${masu}.`
+            : verb.group === "ichidan"
+              ? `${verb.dict} termina en e/i + る: grupo 2 → ${masu}.`
+              : `${verb.dict} no termina en e/i + る: grupo 1 → ${masu}.`;
+      return {
+        kind: "choice",
+        key,
+        prompt: `¿De qué grupo es ${verb.dict} (${verb.es})?`,
+        promptJa: false,
+        options: labels,
+        optionsJa: false,
+        answer: labels.indexOf(GROUP_LABEL[verb.group]),
+        explanation: why,
+        speak: verb.dict,
+      };
+    }
+    case "adjectives": {
+      const kinds = lesson.focus ?? ["i", "na"];
+      const pool = ADJECTIVES.filter((a) => kinds.includes(a.kind));
+      const adjective = pool[int(random, 0, pool.length - 1)];
+      if (!adjective) throw new Error(`La lección ${lesson.id} no tiene adjetivos`);
+      const forms = Object.keys(ADJECTIVE_FORMS) as AdjectiveForm[];
+      // The present needs no conjugation, so it is not asked.
+      const form = forms[int(random, 1, forms.length - 1)] ?? "neg";
+      const correct = conjugateAdjective(adjective, form);
+      const label = adjective.kind === "na" ? `${adjective.base}（な）` : adjective.base;
+      return build(
+        `${label} (${adjective.es}) → ${ADJECTIVE_FORMS[form]}`,
+        correct,
+        [correct, correct.replace(/です$/, "")],
+        adjectiveSlips(adjective, form),
+        adjectiveRule(adjective, form),
+      );
+    }
     default:
       throw new Error(`La lección ${lesson.id} no tiene generador`);
   }
@@ -481,6 +597,21 @@ const withDefaults = (options: SessionOptions): Required<SessionOptions> => ({
   size: options.size ?? SESSION_SIZE,
 });
 
+/** The study card that introduces an item before it is first tested. */
+function learnCard(item: LessonItem): Exercise {
+  return {
+    kind: "learn",
+    key: null,
+    jp: item.jp,
+    reading: item.glyph ? item.jp : reading(item),
+    romaji: item.glyph ? item.es : romajiOf(item),
+    es: item.glyph ? `se lee «${item.es}»` : item.es,
+    glyph: !!item.glyph,
+    mnemonic: item.mnemonic,
+    strokes: item.glyph ? STROKE_COUNTS[item.jp] : undefined,
+  };
+}
+
 /** One session of a lesson. Explanations are shown by the page; these are the exercises. */
 export function buildLessonSession(
   lesson: Lesson,
@@ -491,25 +622,33 @@ export function buildLessonSession(
   const opts = withDefaults(options);
   const questions = lesson.questions ?? [];
   const questionCount = Math.min(questions.length, Math.ceil(opts.size / 3));
-  const generatedCount = lesson.generator ? 4 : 0;
+  const generatedCount = lesson.generator ? (lesson.generatedCount ?? 4) : 0;
   const itemCount = Math.min(
     lesson.items.length,
     Math.max(4, opts.size - questionCount - generatedCount),
   );
+  const recordOf = (i: LessonItem) => records[itemKey(lesson, i)];
 
+  // Lessons that teach first bring a few new items in course order, plus known ones to review.
+  const newItems = lesson.learnFirst
+    ? lesson.items.filter((i) => !recordOf(i)).slice(0, NEW_PER_SESSION)
+    : [];
+  const pool = lesson.learnFirst ? lesson.items.filter((i) => recordOf(i)) : lesson.items;
   const items = pick(
-    lesson.items,
-    (i) => need(records[itemKey(lesson, i)], today),
-    itemCount,
+    pool,
+    (i) => need(recordOf(i), today),
+    Math.max(0, itemCount - newItems.length),
     opts.random,
   )
     // Easiest first: recognizing before recalling before producing.
-    .sort(
-      (a, b) => (records[itemKey(lesson, a)]?.box ?? 0) - (records[itemKey(lesson, b)]?.box ?? 0),
-    );
+    .sort((a, b) => (recordOf(a)?.box ?? 0) - (recordOf(b)?.box ?? 0));
   const exercises: Exercise[] = [];
 
-  const fresh = items.filter((i) => !records[itemKey(lesson, i)]);
+  // Study each new item, then recall it right away, while it is fresh.
+  for (const item of newItems) {
+    exercises.push(learnCard(item), itemExercise(lesson, item, undefined, opts));
+  }
+  const fresh = [...newItems, ...items.filter((i) => !recordOf(i))];
   if (fresh.length >= 4) {
     exercises.push({
       kind: "match",
@@ -519,8 +658,7 @@ export function buildLessonSession(
         .map((i) => ({ jp: i.jp, es: i.es })),
     });
   }
-  for (const item of items)
-    exercises.push(itemExercise(lesson, item, records[itemKey(lesson, item)], opts));
+  for (const item of items) exercises.push(itemExercise(lesson, item, recordOf(item), opts));
   for (let i = 0; i < generatedCount; i++)
     exercises.push(generated(lesson, records[generatorKey(lesson)], opts.random));
   const chosen = pick(
@@ -531,11 +669,15 @@ export function buildLessonSession(
   );
   for (const { q, index } of chosen)
     exercises.push(questionExercise(lesson, q, index, opts.random));
+  // The new items come back at the end the other way round, from the sound to the writing.
+  const later: KanaRecord = { box: 1, due: today, attempts: 0, correct: 0 };
+  for (const item of shuffle(newItems, opts.random))
+    exercises.push(itemExercise(lesson, item, later, opts));
   return exercises;
 }
 
-export const startedLessons = (state: HubState) =>
-  LESSONS.filter((l) => state.progress.lessons[l.id]);
+export const startedLessons = (state: HubState, course: readonly Lesson[] = LESSONS) =>
+  course.filter((l) => state.progress.lessons[l.id]);
 
 interface Due {
   lesson: Lesson;
@@ -544,9 +686,13 @@ interface Due {
 }
 
 /** Items of the lessons already started that are due today, weakest first. */
-export function dueLessonItems(state: HubState, today: string): Due[] {
+export function dueLessonItems(
+  state: HubState,
+  today: string,
+  course: readonly Lesson[] = LESSONS,
+): Due[] {
   const records = state.progress.items;
-  return startedLessons(state)
+  return startedLessons(state, course)
     .flatMap((lesson) =>
       lesson.items.flatMap((item) => {
         const record = records[itemKey(lesson, item)];
@@ -561,16 +707,17 @@ export function buildReviewSession(
   state: HubState,
   today: string,
   options: SessionOptions = {},
+  course: readonly Lesson[] = LESSONS,
 ): Exercise[] {
   const opts = withDefaults(options);
   const due = pick(
-    dueLessonItems(state, today),
+    dueLessonItems(state, today, course),
     (d) => need(d.record, today),
     opts.size,
     opts.random,
   );
   const exercises = due.map((d) => itemExercise(d.lesson, d.item, d.record, opts));
-  for (const lesson of startedLessons(state).filter((l) => l.generator)) {
+  for (const lesson of startedLessons(state, course).filter((l) => l.generator)) {
     const record = state.progress.items[generatorKey(lesson)];
     if (exercises.length < opts.size && (!record || record.due <= today)) {
       exercises.push(generated(lesson, record, opts.random));
@@ -598,8 +745,8 @@ export function lessonStatus(record: LessonRecord | undefined): LessonStatus {
 }
 
 /** The first lesson not yet completed, in course order. */
-export const nextLesson = (state: HubState): Lesson | null =>
-  LESSONS.find((l) => !state.progress.lessons[l.id]?.completedAt) ?? null;
+export const nextLesson = (state: HubState, course: readonly Lesson[] = LESSONS): Lesson | null =>
+  course.find((l) => !state.progress.lessons[l.id]?.completedAt) ?? null;
 
 /** Updates a lesson's record after a session. `score` is the percentage right on first try. */
 export function recordLessonRun(

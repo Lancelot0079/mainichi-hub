@@ -58,6 +58,11 @@ export function LessonPlayer({
 
   function answer(result: Answered) {
     if (!step || answered) return;
+    // A study card asks nothing, so it is neither graded nor counted in the score.
+    if (step.exercise.kind === "learn") {
+      next();
+      return;
+    }
     setAnswered(result);
     if (step.retry) return;
     setFirstTry((t) => ({ right: t.right + (result.correct ? 1 : 0), total: t.total + 1 }));

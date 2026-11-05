@@ -66,10 +66,11 @@ export const TOUR_STEPS: readonly TourStep[] = [
   {
     route: "kana",
     jp: "仮名",
-    title: "Kana: lectura rápida",
+    title: "Kana desde cero",
     points: [
-      "Rondas cortas de hiragana o katakana: ves el carácter y escribes su lectura.",
-      "Las filas nuevas se desbloquean solas cuando dominas las anteriores.",
+      "Un curso propio: el sistema, hiragana, katakana, partículas y conjugación de verbos y adjetivos.",
+      "Cada kana nuevo llega con una tarjeta y una imagen para recordarlo, de cinco en cinco, y vuelve hasta que lo dibujas de memoria.",
+      "En Tabla tocas cualquier kana para oírlo y ver su truco; en Lectura rápida haces rondas cortas.",
     ],
   },
   {

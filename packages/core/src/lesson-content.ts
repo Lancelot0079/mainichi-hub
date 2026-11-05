@@ -8,13 +8,13 @@ import type { Lesson, LessonItem } from "./lessons";
  */
 
 /** Rows of the kana table (see kana.ts) as glyph items. */
-function kanaItems(script: Script, rows: readonly number[]): LessonItem[] {
+export function kanaItems(script: Script, rows: readonly number[]): LessonItem[] {
   return KANA[script]
     .filter((k) => rows.includes(k.row))
     .map((k) => ({ jp: k.char, es: k.answers[0] ?? "", glyph: true, alt: k.answers }));
 }
 
-const rowTable = (script: Script, rows: readonly number[]) => ({
+export const rowTable = (script: Script, rows: readonly number[]) => ({
   head: ["a", "i", "u", "e", "o"],
   jpCells: true,
   rows: rows.flatMap((row) => {

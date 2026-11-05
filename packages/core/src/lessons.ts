@@ -6,10 +6,16 @@ import type { Script } from "./kana";
  * lesson adapt to what each person already knows.
  */
 
-export type LessonUnit =
-  "escritura" | "hiragana" | "katakana" | "expresiones" | "numeros" | "gramatica";
+/** A group of lessons inside a course. Each course has its own list of units. */
+export interface CourseUnit {
+  id: string;
+  jp: string;
+  title: string;
+}
 
-export const LESSON_UNITS: ReadonlyArray<{ id: LessonUnit; jp: string; title: string }> = [
+export type LessonUnit = string;
+
+export const LESSON_UNITS: readonly CourseUnit[] = [
   { id: "escritura", jp: "文字", title: "La escritura japonesa" },
   { id: "hiragana", jp: "ひらがな", title: "Hiragana" },
   { id: "katakana", jp: "カタカナ", title: "Katakana" },
@@ -30,6 +36,8 @@ export interface LessonItem {
   glyph?: boolean;
   /** Other answers accepted when typing, in kana or rōmaji. */
   alt?: readonly string[];
+  /** A memory hook shown when the item is first learned. */
+  mnemonic?: string;
 }
 
 export interface LessonExample {
@@ -65,7 +73,19 @@ export type LessonQuestion =
       explanation?: string;
     };
 
-export type LessonGenerator = "numbers-small" | "numbers-big" | "time" | "dates";
+export type LessonGenerator =
+  | "numbers-small"
+  | "numbers-big"
+  | "time"
+  | "dates"
+  /** Fill in the particle; `focus` lists the particles practiced. */
+  | "particles"
+  /** Conjugate a verb; `focus` lists the forms (see VerbForm). */
+  | "verbs"
+  /** Say which group a verb belongs to. */
+  | "verb-groups"
+  /** Conjugate an adjective; `focus` lists the kinds, "i" and/or "na". */
+  | "adjectives";
 
 export interface Lesson {
   id: string;
@@ -78,6 +98,15 @@ export interface Lesson {
   questions?: readonly LessonQuestion[];
   /** Endless practice built from rules instead of fixed items. */
   generator?: LessonGenerator;
+  /** What the generator practices: particles, verb forms or adjective kinds. */
+  focus?: readonly string[];
+  /** Generated exercises per session; 4 when not set. */
+  generatedCount?: number;
+  /**
+   * New items are introduced with a study card, a few at a time, recalled right away and again
+   * at the end of the session.
+   */
+  learnFirst?: boolean;
   /** Glyph items can be drawn and recognized when the script is known. */
   script?: Script;
   /** An interactive tool shown with the explanations. */

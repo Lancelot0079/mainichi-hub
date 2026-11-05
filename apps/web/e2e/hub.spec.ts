@@ -7,6 +7,8 @@ const ROUTES = [
   "recursos",
   "escucha",
   "kana",
+  "kana/tabla",
+  "kana/lectura",
   "tarjetas",
   "diario",
   "examen",
@@ -51,7 +53,7 @@ test("a new user starts empty and keeps progress after reloading", async ({ page
 });
 
 test("a kana round grades answers and shows the correct reading on a miss", async ({ page }) => {
-  await page.goto("/#kana");
+  await page.goto("/#kana/lectura");
   const field = page.getByLabel("Lectura");
   await field.fill("zzz");
   await field.press("Enter");
@@ -70,7 +72,7 @@ test("unticking a block undoes it", async ({ page }) => {
 });
 
 test("kana practice counts as studying", async ({ page }) => {
-  await page.goto("/#kana");
+  await page.goto("/#kana/lectura");
   const field = page.getByLabel("Lectura");
   await field.fill("zzz");
   await field.press("Enter");
@@ -295,3 +297,57 @@ for (const route of ROUTES) {
     ).toEqual([]);
   });
 }
+
+test("the kana course teaches a new kana with a card, then asks for it", async ({ page }) => {
+  await page.goto("/#kana");
+  await expect(page.getByText("0 de 28 completadas")).toBeVisible();
+  await page.getByRole("button", { name: /Sílabas, no letras/ }).click();
+  await expect(page.getByRole("heading", { name: "Cómo se memoriza aquí" })).toBeVisible();
+  await page.getByRole("button", { name: "Empezar los ejercicios" }).click();
+  await expect(page.getByText("Nuevo · apréndelo")).toBeVisible();
+  await expect(page.locator(".learn-hook")).toContainText("aaah");
+  await page.getByRole("button", { name: "Lo tengo, sigue" }).click();
+  // Right after the card comes the same kana, to recall without help.
+  await expect(page.locator(".ex-options .opt").first()).toBeVisible();
+  await page.locator(".ex-options .opt").first().click();
+  await expect(page.getByText(/¡Correcto!|No exactamente\./)).toBeVisible();
+});
+
+test("a particle exercise explains why the particle goes there", async ({ page }) => {
+  await page.goto("/#kana");
+  await page.getByRole("button", { name: /を, に y へ/ }).click();
+  await page.getByRole("button", { name: "Empezar los ejercicios" }).click();
+  // Answer whatever comes until a fill-in-the-particle exercise shows up.
+  for (let i = 0; i < 25 && !(await page.getByText(/^Completa:/).isVisible()); i++) {
+    const match = page.locator(".match");
+    if (await match.isVisible()) {
+      const words = match.locator(".stack").first().getByRole("button");
+      const meanings = match.locator(".stack").last().getByRole("button");
+      for (let w = 0; w < (await words.count()); w++) {
+        for (let m = 0; m < (await meanings.count()) && !(await words.nth(w).isDisabled()); m++) {
+          await words.nth(w).click();
+          if (!(await meanings.nth(m).isDisabled())) await meanings.nth(m).click();
+        }
+      }
+    } else {
+      const option = page.locator(".ex-options .opt").first();
+      if (await option.isVisible()) await option.click();
+      else await page.getByRole("button", { name: "No lo sé" }).click();
+    }
+    await page.getByRole("button", { name: /Continuar|Ver resultado/ }).click();
+  }
+  await expect(page.locator(".passage")).toContainText("＿＿");
+  await page.locator(".ex-options .opt").first().click();
+  await expect(page.getByRole("status")).toContainText(/ — /);
+});
+
+test("the kana chart shows how to remember the kana you tap", async ({ page }) => {
+  await page.goto("/#kana");
+  await page.getByRole("button", { name: /Tabla/ }).click();
+  await expect(page).toHaveURL(/#kana\/tabla$/);
+  await page.getByRole("button", { name: "ね, ne" }).click();
+  await expect(page.locator(".chart-detail")).toContainText("gato");
+  await page.getByRole("button", { name: "カタカナ Katakana" }).click();
+  await page.getByRole("button", { name: "シ, shi" }).click();
+  await expect(page.locator(".chart-detail")).toContainText("hacia arriba");
+});

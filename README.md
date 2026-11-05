@@ -18,6 +18,10 @@ conflict-free multi-device sync and no servers to run.
   progress tracking.
 - **Lessons from zero**: 27 interactive lessons (writing systems, kana, greetings, numbers, time,
   dates and first sentences) that adapt to what you already know, plus a mixed review.
+- **Kana from zero**: its own course of 28 lessons on the writing system, hiragana, katakana,
+  particles and verb and adjective conjugation. New kana come five at a time with a study card and
+  a memory hook, are recalled right away and again at the end, and return on a spaced schedule.
+  An interactive chart plays each kana and shows its hook.
 - **Handwriting challenge**: draw a kana from memory and an in-browser shape matcher tells you how
   close it is to the right one, with no server or trained model.
 - **Practice tools**: kana trainer, spaced-repetition cards, a sentence diary, and routine timers.

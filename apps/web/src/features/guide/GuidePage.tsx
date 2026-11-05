@@ -136,10 +136,22 @@ const TUTORIALS: ReadonlyArray<{ title: string; jp: string; steps: readonly stri
     ],
   },
   {
-    title: "Entrenar kana",
+    title: "Kana desde cero",
     jp: "仮名",
     steps: [
-      "Elige hiragana o katakana, escribe la lectura en rōmaji y pulsa Enter.",
+      "Abre Kana → Curso y empieza por «Sílabas, no letras». Sigue el orden: sistema, hiragana, sonidos, katakana, partículas, verbos y adjetivos.",
+      "Cada kana nuevo aparece en una tarjeta «Apréndelo» con su sonido y una imagen. Dilo en voz alta y pulsa «Lo tengo».",
+      "Enseguida te lo pregunta sin ayuda y vuelve al final de la sesión al revés: del sonido al kana. Cada sesión trae como máximo cinco nuevos.",
+      "En partículas completas oraciones; en verbos y adjetivos conjugas. Cada error te explica la regla.",
+      "Lo que ya viste vuelve en el «Repaso mixto» cuando toca, y con práctica pasa de reconocerlo a escribirlo y dibujarlo.",
+      "En Kana → Tabla tocas cualquier kana para oírlo, ver su truco y cuánto lo dominas.",
+    ],
+  },
+  {
+    title: "Lectura rápida de kana",
+    jp: "読",
+    steps: [
+      "En Kana → Lectura rápida, elige hiragana o katakana, escribe la lectura en rōmaji y pulsa Enter.",
       "Si fallas, la página te muestra la respuesta y el carácter vuelve al final de la ronda.",
       "Las filas nuevas se desbloquean solas cuando dominas las anteriores.",
       "Práctica libre repasa 10 al azar sin alterar tu calendario.",

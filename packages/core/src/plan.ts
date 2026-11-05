@@ -78,7 +78,7 @@ export function dailyPlan(state: HubState, snapshot: Snapshot, today: string): D
     title: `${kana} kana por repasar`,
     detail: kana ? "Unos 3 minutos" : "Nada pendiente; puedes hacer práctica libre",
     count: kana,
-    href: "#kana",
+    href: "#kana/lectura",
     external: false,
   });
   const lessonReviews = dueLessonItems(state, today).length;

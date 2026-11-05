@@ -114,7 +114,8 @@ const ROUTES = [
 
 function useRoute() {
   const read = () => {
-    const hash = location.hash.slice(1);
+    // A section may carry a part after a slash, as in #kana/lectura.
+    const hash = location.hash.slice(1).split("/")[0];
     return ROUTES.find((r) => r.id === hash) ?? ROUTES[0];
   };
   const [route, setRoute] = useState(read);

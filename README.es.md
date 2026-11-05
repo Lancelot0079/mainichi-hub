@@ -16,6 +16,10 @@ sincronización entre dispositivos sin conflictos y ningún servidor que mantene
   clic y seguimiento de avance.
 - **Lecciones desde cero**: 27 lecciones interactivas (escritura, kana, saludos, números, hora,
   fechas y primeras oraciones) que se adaptan a lo que ya sabes, con repaso mixto.
+- **Kana desde cero**: un curso propio de 28 lecciones sobre el sistema, hiragana, katakana,
+  partículas y conjugación de verbos y adjetivos. Los kana nuevos llegan de cinco en cinco con
+  una tarjeta y una imagen para recordarlos, se recuerdan enseguida y al final, y vuelven con
+  repetición espaciada. Una tabla interactiva pronuncia cada kana y muestra su truco.
 - **Reto de escritura**: dibujas un kana de memoria y el sistema reconoce la forma y te dice cuánto
   se parece al correcto, sin servidores ni modelos externos.
 - **Herramientas de práctica**: entrenador de kana, tarjetas con repetición espaciada, diario de

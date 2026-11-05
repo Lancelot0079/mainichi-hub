@@ -337,6 +337,43 @@ function Draw({ exercise, answered, onAnswer }: Props<"draw">) {
   );
 }
 
+/** A study card: the new item, its sound and a picture to remember it by, before any question. */
+function Learn({ exercise, audio, onAnswer }: Props<"learn">) {
+  useEffect(() => {
+    if (audio) speak(exercise.reading);
+  }, [exercise, audio]);
+  return (
+    <div className="learn">
+      <span className="chip">Nuevo · apréndelo</span>
+      <div className="learn-card">
+        <Jp className={exercise.glyph ? "learn-glyph" : "learn-word"}>{exercise.jp}</Jp>
+        <div className="learn-side">
+          <b className="learn-romaji">{exercise.romaji}</b>
+          <span>{exercise.es}</span>
+          {exercise.strokes !== undefined && (
+            <span className="muted small">
+              {exercise.strokes} trazo{exercise.strokes === 1 ? "" : "s"}
+            </span>
+          )}
+          <SpeakButton text={exercise.reading} audio={audio} />
+        </div>
+      </div>
+      {exercise.mnemonic && <p className="learn-hook">{exercise.mnemonic}</p>}
+      <p className="muted small">
+        Dilo en voz alta dos veces y fíjate en la forma. Enseguida te lo pregunto sin ayuda.
+      </p>
+      <button
+        type="button"
+        className="btn shu"
+        autoFocus
+        onClick={() => onAnswer({ correct: true, feedback: "" })}
+      >
+        Lo tengo, sigue
+      </button>
+    </div>
+  );
+}
+
 export function ExerciseView(props: {
   exercise: Exercise;
   audio: boolean;
@@ -355,5 +392,7 @@ export function ExerciseView(props: {
       return <Match {...props} exercise={exercise} />;
     case "draw":
       return <Draw {...props} exercise={exercise} />;
+    case "learn":
+      return <Learn {...props} exercise={exercise} />;
   }
 }

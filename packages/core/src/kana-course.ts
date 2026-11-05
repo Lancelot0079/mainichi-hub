@@ -14,7 +14,8 @@ export const KANA_UNITS: readonly CourseUnit[] = [
   { id: "kana-sistema", jp: "仕組み", title: "Cómo funciona el kana" },
   { id: "kana-hiragana", jp: "ひらがな", title: "Hiragana, fila por fila" },
   { id: "kana-sonidos", jp: "濁音", title: "Tenten, combinados y sonidos largos" },
-  { id: "kana-katakana", jp: "カタカナ", title: "Katakana" },
+  { id: "kata-filas", jp: "カタカナ", title: "Katakana, fila por fila" },
+  { id: "kata-sonidos", jp: "ガ", title: "Tenten, combinados y palabras en katakana" },
   { id: "kana-particulas", jp: "助詞", title: "Partículas" },
   { id: "kana-verbos", jp: "動詞", title: "Conjugación de verbos" },
   { id: "kana-adjetivos", jp: "形容詞", title: "Adjetivos" },
@@ -84,7 +85,7 @@ const katakanaRow = (
   tips: readonly string[],
 ): Lesson => ({
   id,
-  unit: "kana-katakana",
+  unit: "kata-filas",
   jp: glyphs("k", rows)[0]?.jp ?? "ア",
   title,
   summary: `${glyphs("k", rows)
@@ -476,8 +477,29 @@ export const KANA_COURSE: readonly Lesson[] = [
     "ロ parece el kanji 口 (boca), pero es más pequeño.",
   ]),
   {
+    id: "kd-k-todo",
+    unit: "kata-filas",
+    jp: "全",
+    title: "Las 46 mezcladas",
+    summary: "Todo el katakana básico fuera de orden, con énfasis en las parejas que se confunden.",
+    script: "k",
+    notes: [
+      {
+        title: "Las parejas trampa",
+        body: [
+          "シ y ツ: los trazos de シ suben de izquierda a derecha; los de ツ caen desde arriba.",
+          "ソ y ン: el trazo largo de ソ cae; el de ン sube.",
+          "ク y ケ, ウ y ワ, ヌ y ス: mira el trazo que sobra o que falta.",
+          "Cada sesión elige las que más te cuestan. Repítela hasta que las 46 te salgan sin pensar.",
+        ],
+        table: rowTable("k", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
+      },
+    ],
+    items: glyphs("k", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
+  },
+  {
     id: "kd-k-sonidos",
-    unit: "kana-katakana",
+    unit: "kata-sonidos",
     jp: "ー",
     title: "Katakana con tenten y la raya ー",
     summary: "ガ, パ y compañía, y la raya que alarga las vocales de los préstamos.",
@@ -507,6 +529,65 @@ export const KANA_COURSE: readonly Lesson[] = [
       word("パーティー", "fiesta"),
       word("テレビ", "televisión"),
       word("パソコン", "computador"),
+    ],
+  },
+  {
+    id: "kd-k-yoon",
+    unit: "kata-sonidos",
+    jp: "キャ",
+    title: "Combinados: キャ, シュ, チョ",
+    summary: "Igual que en hiragana: un kana de la columna i más ャ, ュ o ョ pequeña.",
+    script: "k",
+    learnFirst: true,
+    notes: [
+      {
+        title: "Una sílaba, dos caracteres",
+        body: [
+          "キ + ャ pequeña = キャ (kya). Si la ヤ es grande, son dos sílabas: キヤ.",
+          "Aparecen mucho en préstamos: チョコレート (chocolate), シャツ (camisa), ニュース (noticias).",
+        ],
+        examples: [
+          { jp: "シャツ", es: "camisa" },
+          { jp: "ニュース", es: "noticias" },
+          { jp: "チョコレート", es: "chocolate" },
+        ],
+      },
+    ],
+    items: glyphs("k", [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]),
+  },
+  {
+    id: "kd-k-palabras",
+    unit: "kata-sonidos",
+    jp: "語",
+    title: "Leer palabras en katakana",
+    summary: "Países, ciudades y palabras prestadas: leer katakana de corrido.",
+    notes: [
+      {
+        title: "Cómo se adapta una palabra extranjera",
+        body: [
+          "El japonés casi no tiene consonantes sueltas, así que añade vocales: «hotel» → ホテル (hoteru).",
+          "La l y la r se escriben igual, con la fila ラ: «restaurante» → レストラン.",
+          "Las vocales largas van con ー: タクシー (taxi), アイスクリーム (helado).",
+          "Lee despacio, sílaba por sílaba, y después dilo de corrido: suele sonar a la palabra original.",
+        ],
+        examples: [
+          { jp: "コロンビア", es: "Colombia" },
+          { jp: "ボゴタ", es: "Bogotá" },
+          { jp: "ホテル", es: "hotel" },
+        ],
+      },
+    ],
+    items: [
+      word("コロンビア", "Colombia"),
+      word("ボゴタ", "Bogotá"),
+      word("メキシコ", "México"),
+      word("スペイン", "España"),
+      word("アメリカ", "Estados Unidos"),
+      word("ホテル", "hotel"),
+      word("レストラン", "restaurante"),
+      word("タクシー", "taxi"),
+      word("アイスクリーム", "helado"),
+      word("カメラ", "cámara"),
     ],
   },
 
@@ -957,5 +1038,11 @@ export const KANA_COURSE: readonly Lesson[] = [
     items: adjectiveItems("na"),
   },
 ];
+
+/** The hiragana side of the course, with the grammar, which is written in hiragana. */
+export const HIRAGANA_UNITS = KANA_UNITS.filter((u) => !u.id.startsWith("kata-"));
+export const KATAKANA_UNITS = KANA_UNITS.filter((u) => u.id.startsWith("kata-"));
+export const HIRAGANA_COURSE = KANA_COURSE.filter((l) => !l.unit.startsWith("kata-"));
+export const KATAKANA_COURSE = KANA_COURSE.filter((l) => l.unit.startsWith("kata-"));
 
 export const kanaLessonById = (id: string) => KANA_COURSE.find((l) => l.id === id);

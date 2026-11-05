@@ -64,13 +64,22 @@ export const TOUR_STEPS: readonly TourStep[] = [
     ],
   },
   {
-    route: "kana",
-    jp: "仮名",
-    title: "Kana desde cero",
+    route: "hiragana",
+    jp: "ひらがな",
+    title: "Hiragana desde cero",
     points: [
-      "Un curso propio: el sistema, hiragana, katakana, partículas y conjugación de verbos y adjetivos.",
+      "Un curso propio: cómo funciona el kana, el hiragana fila por fila, los sonidos con tenten y combinados, y después partículas y conjugación de verbos y adjetivos.",
       "Cada kana nuevo llega con una tarjeta y una imagen para recordarlo, de cinco en cinco, y vuelve hasta que lo dibujas de memoria.",
       "En Tabla tocas cualquier kana para oírlo y ver su truco; en Lectura rápida haces rondas cortas.",
+    ],
+  },
+  {
+    route: "katakana",
+    jp: "カタカナ",
+    title: "Katakana",
+    points: [
+      "Su propia sección, con el mismo método: filas, las 46 mezcladas, tenten, combinados y palabras prestadas como ホテル o コロンビア.",
+      "Empieza cuando el hiragana ya te salga sin pensar: los sonidos son los mismos.",
     ],
   },
   {

@@ -2,9 +2,12 @@ import {
   isCorrectReading,
   itemKey,
   KANA,
+  HIRAGANA_COURSE,
+  HIRAGANA_UNITS,
   KANA_COURSE,
   KANA_MNEMONICS,
-  KANA_UNITS,
+  KATAKANA_COURSE,
+  KATAKANA_UNITS,
   rowTable,
   STROKE_COUNTS,
   kanaDue,
@@ -15,8 +18,8 @@ import {
   type Script,
 } from "@mainichi/core";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { answerKana, setScript } from "../../state/actions";
-import { getHub, useHub, type Hub } from "../../state/store";
+import { answerKana } from "../../state/actions";
+import { useHub, type Hub } from "../../state/store";
 import { Jp } from "../../ui/primitives";
 import { useJapaneseVoice, speak } from "../../ui/speech";
 import { toast } from "../../ui/toast";
@@ -71,9 +74,8 @@ function KanaTable({ script }: { script: Script }) {
 }
 
 /** Quick reading drill: see a kana, type its reading. */
-function QuickReading() {
+function QuickReading({ script }: { script: Script }) {
   const { state, today } = useHub();
-  const script = state.progress.script;
   const [round, setRound] = useState<Round>(() =>
     startRound(shuffled(kanaDue(state, script, today)), false),
   );
@@ -97,15 +99,6 @@ function QuickReading() {
     setMissed(false);
     setRound((r) => startRound(r.queue, r.free));
   }, []);
-
-  function changeScript(value: Script) {
-    setScript(value);
-    const hub = getHub();
-    setRound(startRound(shuffled(kanaDue(hub.state, value, hub.today)), false));
-    setInput("");
-    setFeedback(null);
-    setMissed(false);
-  }
 
   function record(correct: boolean) {
     if (!round.current) return;
@@ -148,14 +141,9 @@ function QuickReading() {
   return (
     <>
       <div className="row between">
-        <div className="seg" role="group" aria-label="Silabario">
-          <button type="button" aria-pressed={script === "h"} onClick={() => changeScript("h")}>
-            <Jp>ひらがな</Jp> Hiragana
-          </button>
-          <button type="button" aria-pressed={script === "k"} onClick={() => changeScript("k")}>
-            <Jp>カタカナ</Jp> Katakana
-          </button>
-        </div>
+        <h2 className="card-title">
+          Lectura rápida de <Jp>{script === "h" ? "ひらがな" : "カタカナ"}</Jp>
+        </h2>
         <span className="muted num">
           {due} por repasar · {unlockedKana(state, script).length} desbloqueados · {mastered}{" "}
           dominados de {total}
@@ -285,10 +273,9 @@ const CHART_GROUPS = [
 ] as const;
 
 /** The whole syllabary to explore: tap a kana to hear it and see how to remember it. */
-function KanaChart() {
+function KanaChart({ script }: { script: Script }) {
   const hub = useHub();
   const audio = useJapaneseVoice();
-  const [script, setScriptView] = useState<Script>(hub.state.progress.script);
   const [selected, setSelected] = useState<string>(script === "h" ? "あ" : "ア");
   const item = KANA[script].find((k) => k.char === selected) ?? KANA[script][0];
   const box = item ? kanaBox(hub, script, item.char) : null;
@@ -303,22 +290,6 @@ function KanaChart() {
   return (
     <>
       <div className="row between">
-        <div className="seg" role="group" aria-label="Silabario de la tabla">
-          {(["h", "k"] as const).map((value) => (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={script === value}
-              onClick={() => {
-                setScriptView(value);
-                setSelected(value === "h" ? "あ" : "ア");
-              }}
-            >
-              <Jp>{value === "h" ? "ひらがな" : "カタカナ"}</Jp>{" "}
-              {value === "h" ? "Hiragana" : "Katakana"}
-            </button>
-          ))}
-        </div>
         <span className="muted small">Toca un kana para escucharlo y ver cómo recordarlo.</span>
       </div>
       <div className="chart-layout mt">
@@ -404,13 +375,32 @@ const TABS: ReadonlyArray<readonly [Tab, string, string]> = [
   ["lectura", "読", "Lectura rápida"],
 ];
 
-/** The part after the section in the address, as in #kana/lectura. */
+const SECTIONS = {
+  h: {
+    route: "hiragana",
+    title: "Hiragana desde cero",
+    backLabel: "Todo el curso de hiragana",
+    lessons: HIRAGANA_COURSE,
+    units: HIRAGANA_UNITS,
+  },
+  k: {
+    route: "katakana",
+    title: "Katakana desde cero",
+    backLabel: "Todo el curso de katakana",
+    lessons: KATAKANA_COURSE,
+    units: KATAKANA_UNITS,
+  },
+} as const;
+
+/** The part after the section in the address, as in #hiragana/lectura. */
 function tabFromHash(): Tab {
   const part = location.hash.split("/")[1];
   return part === "tabla" || part === "lectura" ? part : "curso";
 }
 
-export default function KanaPage() {
+/** One syllabary: its course, its chart and its quick-reading drill. */
+export function KanaSection({ script }: { script: Script }) {
+  const section = SECTIONS[script];
   const [tab, setTab] = useState<Tab>(tabFromHash);
 
   useEffect(() => {
@@ -420,13 +410,13 @@ export default function KanaPage() {
   }, []);
 
   function open(value: Tab) {
-    history.replaceState(null, "", value === "curso" ? "#kana" : `#kana/${value}`);
+    history.replaceState(null, "", `#${section.route}${value === "curso" ? "" : `/${value}`}`);
     setTab(value);
   }
 
   return (
     <>
-      <div className="seg kana-tabs" role="group" aria-label="Partes de la sección Kana">
+      <div className="seg kana-tabs" role="group" aria-label={`Partes de ${section.title}`}>
         {TABS.map(([value, jp, label]) => (
           <button
             key={value}
@@ -440,14 +430,14 @@ export default function KanaPage() {
       </div>
       {tab === "curso" && (
         <Course
-          lessons={KANA_COURSE}
-          units={KANA_UNITS}
-          title="Kana desde cero"
-          backLabel="Todo el curso de kana"
+          lessons={section.lessons}
+          units={section.units}
+          title={section.title}
+          backLabel={section.backLabel}
         />
       )}
-      {tab === "tabla" && <KanaChart />}
-      {tab === "lectura" && <QuickReading />}
+      {tab === "tabla" && <KanaChart script={script} />}
+      {tab === "lectura" && <QuickReading script={script} />}
     </>
   );
 }

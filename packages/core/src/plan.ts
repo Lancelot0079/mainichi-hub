@@ -70,7 +70,9 @@ export function dailyPlan(state: HubState, snapshot: Snapshot, today: string): D
       external: false,
     });
   }
-  const kana = kanaDue(state, "h", today).length + kanaDue(state, "k", today).length;
+  const hiragana = kanaDue(state, "h", today).length;
+  const katakana = kanaDue(state, "k", today).length;
+  const kana = hiragana + katakana;
   items.push({
     id: "kana",
     block: "srs",
@@ -78,7 +80,8 @@ export function dailyPlan(state: HubState, snapshot: Snapshot, today: string): D
     title: `${kana} kana por repasar`,
     detail: kana ? "Unos 3 minutos" : "Nada pendiente; puedes hacer práctica libre",
     count: kana,
-    href: "#kana/lectura",
+    // Opens the syllabary with more waiting; the other one is a tap away.
+    href: katakana > hiragana ? "#katakana/lectura" : "#hiragana/lectura",
     external: false,
   });
   const lessonReviews = dueLessonItems(state, today).length;

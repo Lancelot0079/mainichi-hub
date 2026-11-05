@@ -6,9 +6,11 @@ const ROUTES = [
   "lecciones",
   "recursos",
   "escucha",
-  "kana",
-  "kana/tabla",
-  "kana/lectura",
+  "hiragana",
+  "hiragana/tabla",
+  "hiragana/lectura",
+  "katakana",
+  "katakana/tabla",
   "tarjetas",
   "diario",
   "examen",
@@ -53,7 +55,7 @@ test("a new user starts empty and keeps progress after reloading", async ({ page
 });
 
 test("a kana round grades answers and shows the correct reading on a miss", async ({ page }) => {
-  await page.goto("/#kana/lectura");
+  await page.goto("/#hiragana/lectura");
   const field = page.getByLabel("Lectura");
   await field.fill("zzz");
   await field.press("Enter");
@@ -72,7 +74,7 @@ test("unticking a block undoes it", async ({ page }) => {
 });
 
 test("kana practice counts as studying", async ({ page }) => {
-  await page.goto("/#kana/lectura");
+  await page.goto("/#hiragana/lectura");
   const field = page.getByLabel("Lectura");
   await field.fill("zzz");
   await field.press("Enter");
@@ -299,8 +301,8 @@ for (const route of ROUTES) {
 }
 
 test("the kana course teaches a new kana with a card, then asks for it", async ({ page }) => {
-  await page.goto("/#kana");
-  await expect(page.getByText("0 de 28 completadas")).toBeVisible();
+  await page.goto("/#hiragana");
+  await expect(page.getByText("0 de 24 completadas")).toBeVisible();
   await page.getByRole("button", { name: /Sílabas, no letras/ }).click();
   await expect(page.getByRole("heading", { name: "Cómo se memoriza aquí" })).toBeVisible();
   await page.getByRole("button", { name: "Empezar los ejercicios" }).click();
@@ -314,7 +316,7 @@ test("the kana course teaches a new kana with a card, then asks for it", async (
 });
 
 test("a particle exercise explains why the particle goes there", async ({ page }) => {
-  await page.goto("/#kana");
+  await page.goto("/#hiragana");
   await page.getByRole("button", { name: /を, に y へ/ }).click();
   await page.getByRole("button", { name: "Empezar los ejercicios" }).click();
   // Answer whatever comes until a fill-in-the-particle exercise shows up.
@@ -342,12 +344,21 @@ test("a particle exercise explains why the particle goes there", async ({ page }
 });
 
 test("the kana chart shows how to remember the kana you tap", async ({ page }) => {
-  await page.goto("/#kana");
+  await page.goto("/#hiragana");
   await page.getByRole("button", { name: /Tabla/ }).click();
-  await expect(page).toHaveURL(/#kana\/tabla$/);
+  await expect(page).toHaveURL(/#hiragana\/tabla$/);
   await page.getByRole("button", { name: "ね, ne" }).click();
   await expect(page.locator(".chart-detail")).toContainText("gato");
-  await page.getByRole("button", { name: "カタカナ Katakana" }).click();
+  await page.goto("/#katakana/tabla");
   await page.getByRole("button", { name: "シ, shi" }).click();
   await expect(page.locator(".chart-detail")).toContainText("hacia arriba");
+});
+
+test("katakana has its own course, and old kana links land on hiragana", async ({ page }) => {
+  await page.goto("/#katakana");
+  await expect(page.getByRole("heading", { name: /Katakana desde cero/ })).toBeVisible();
+  await expect(page.getByText("0 de 7 completadas")).toBeVisible();
+  await expect(page.getByRole("button", { name: /Leer palabras en katakana/ })).toBeVisible();
+  await page.goto("/#kana/lectura");
+  await expect(page.getByRole("heading", { name: /Lectura rápida de/ })).toContainText("ひらがな");
 });

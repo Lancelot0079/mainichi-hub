@@ -238,3 +238,18 @@ describe("the kana course", () => {
     expect(buildReviewSession(state, TODAY, {}, KANA_COURSE)).toHaveLength(1);
   });
 });
+
+describe("hiragana and katakana sections", () => {
+  it("split the course without losing or repeating a lesson", async () => {
+    const { HIRAGANA_COURSE, KATAKANA_COURSE, HIRAGANA_UNITS, KATAKANA_UNITS } =
+      await import("../src");
+    expect(HIRAGANA_COURSE.length + KATAKANA_COURSE.length).toBe(KANA_COURSE.length);
+    expect(new Set([...HIRAGANA_COURSE, ...KATAKANA_COURSE]).size).toBe(KANA_COURSE.length);
+    expect(HIRAGANA_UNITS.length + KATAKANA_UNITS.length).toBe(KANA_UNITS.length);
+    // Every katakana lesson teaches katakana: its kana, or words written in it.
+    for (const lesson of KATAKANA_COURSE) {
+      for (const item of lesson.items) expect(item.jp, lesson.id).toMatch(/^[゠-ヿ]+$/);
+    }
+    expect(HIRAGANA_COURSE.some((l) => l.script === "k")).toBe(false);
+  });
+});

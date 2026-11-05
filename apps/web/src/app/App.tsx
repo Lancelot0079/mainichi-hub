@@ -47,13 +47,22 @@ const ROUTES = [
     Page: page(() => import("../features/listening/ListeningPage")),
   },
   {
-    id: "kana",
-    jp: "仮名",
-    mark: "仮",
-    reading: "かな",
+    id: "hiragana",
+    jp: "ひらがな",
+    mark: "ひ",
+    reading: "ひらがな",
     line: "var(--c-les)",
-    label: "Kana",
-    Page: page(() => import("../features/kana/KanaPage")),
+    label: "Hiragana",
+    Page: page(() => import("../features/kana/HiraganaPage")),
+  },
+  {
+    id: "katakana",
+    jp: "カタカナ",
+    mark: "カ",
+    reading: "かたかな",
+    line: "var(--c-lis)",
+    label: "Katakana",
+    Page: page(() => import("../features/kana/KatakanaPage")),
   },
   {
     id: "tarjetas",
@@ -114,8 +123,10 @@ const ROUTES = [
 
 function useRoute() {
   const read = () => {
-    // A section may carry a part after a slash, as in #kana/lectura.
+    // A section may carry a part after a slash, as in #hiragana/lectura.
     const hash = location.hash.slice(1).split("/")[0];
+    // #kana was one section before hiragana and katakana were split.
+    if (hash === "kana") return ROUTES.find((r) => r.id === "hiragana") ?? ROUTES[0];
     return ROUTES.find((r) => r.id === hash) ?? ROUTES[0];
   };
   const [route, setRoute] = useState(read);
